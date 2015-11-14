@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1 Players in #{tournament}
+  ul
+    each player_name in players
+      li= player_name

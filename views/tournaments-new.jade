@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1 Create a new tournament
+  p After the tournament is created, you will be able to upload tournament results and/or rosters.
+
+  form(action="new", method="post", enctype="multipart/form_data")
+    label(for="tournament_new_id") Tournament ID
+    input(type="text", name="tournament_new_id", id="tournament_new_id", value=form['tournament_new_id'])
+    if warnings && warnings['tournament_id_warning']
+      p.warning= warnings['tournament_id_warning']
+    p Tournament IDs are case insensitive. Tell players the tournament ID and they will type it in order to retrieve results and find their opponents. So, keep it short but descriptive (e.g., "worlds2018").
+
+    label(for="tournament_new_password") Password
+    input(type="password", name="tournament_new_password", id="tournament_new_password", value=form['tournament_new_password'])
+    label(for="tournament_new_password_again") Password Again
+    input(type="password", name="tournament_new_password_again", id="tournament_new_password_again", value=form['tournament_new_password_again'])
+    if warnings && warnings['tournament_password_warning']
+      p.warning= warnings['tournament_password_warning']
+    p The tournament password should be kept secret. Only tournament organizers should know it. It is used to allow the uploading of each round's results.
+
+    input(type='submit',name='submit',value='Submit')
