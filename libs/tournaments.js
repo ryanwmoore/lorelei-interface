@@ -3,6 +3,7 @@ var fs = require("fs");
 var path = require("path");
 
 var tournament = require('lorelei-base/tournament.js');
+var tournamentFileLoader = require('lorelei-base/tournamentFileLoader.js');
 
 //TODO: Fix this
 var players = require(path.join(process.cwd(), './libs/players'));
@@ -10,31 +11,22 @@ var players = require(path.join(process.cwd(), './libs/players'));
 var express = require('express');
 var router = express.Router();
 
-var tournaments_storage_directory = "../examples/";
+var tournaments_storage_directory = "tournament-storage";
 var tournaments_extension = ".tdf";
 
 /* GET home page. */
 router.get('/', function(req, res) {
   debug("Getting list of valid tournaments...");
 
-  fs.readdir(tournaments_storage_directory, function (err, filesAndDirs) {
+  function callback(err, list_of_tournaments) {
     if (err) {
-        throw err;
+      throw err;
+      return;
     }
-
-    var files = filesAndDirs.map(function (file) {
-        return path.join(tournaments_storage_directory, file);
-    }).filter(function (file) {
-        //TODO: Should escape the extension so that "." doesn't match anything
-        return fs.statSync(file).isFile() && file.match(tournaments_extension + "$");
-    }).map(function (file) {
-        return path.basename(file);
-    });
-
-    debug("Found: " + files);
-
-    res.render('tournaments-get', { tournaments: files });
-  });
+    debug("Found: " + list_of_tournaments);
+    res.render('tournaments-get', { tournaments: list_of_tournaments });
+  }
+  var loader = tournamentFileLoader.TournamentFileIteratoryFactory(tournaments_storage_directory, callback);
 });
 
 router.get('/new', function(req, res) {
@@ -64,7 +56,7 @@ router.post('/new', function(req, res) {
     debug(template_variables);
     res.render('tournaments-new',  template_variables);
   } else {
-    debug("No problems");
+
     //TODO?
   }
 });

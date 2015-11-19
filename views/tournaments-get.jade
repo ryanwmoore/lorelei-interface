@@ -2,7 +2,10 @@ extends layout
 
 block content
   h1 Current Tournaments
-  p Pick a tournament:
-  ul
-    each tournament_id in tournaments
-      li= tournament_id
+  if tournaments.length > 0
+    p Pick a tournament:
+    ul
+      each tournament_id in tournaments
+        li= tournament_id
+  else
+    p No tournaments are available.
