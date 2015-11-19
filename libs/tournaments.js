@@ -56,8 +56,16 @@ router.post('/new', function(req, res) {
     debug(template_variables);
     res.render('tournaments-new',  template_variables);
   } else {
-
-    //TODO?
+    var tournament_name = req.body.tournament_new_id;
+    var password = req.body.tournament_new_password;
+      var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+      function callback(err, data) {
+        if (err) {
+          throw err; return;
+        }
+        res.redirect('/tournaments/' + tournament_name + '/');
+      }
+      loader(tournament_name, password, callback);
   }
 });
 
