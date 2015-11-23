@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  if tournament.description
+    h1 #{tournament.description}
+  else
+    h1 #{tournament.data.id}
