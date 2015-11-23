@@ -1,6 +1,7 @@
 var debug = require('debug')('lorelei-interface:tournaments');
 var fs = require("fs");
 var path = require("path");
+var util = require('util');
 
 var tournament = require('lorelei-base/tournament.js');
 var tournamentFileLoader = require('lorelei-base/tournamentFileLoader.js');
@@ -58,31 +59,33 @@ router.post('/new', function(req, res) {
   } else {
     var tournament_name = req.body.tournament_new_id;
     var password = req.body.tournament_new_password;
-      var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
-      function callback(err, data) {
-        if (err) {
-          throw err; return;
-        }
-        res.redirect('/tournaments/' + tournament_name + '/');
-      }
-      loader(tournament_name, password, callback);
+
+    var t = tournament.TournamentNew(tournament_name, password);
+
+    var saveCallback = tournamentFileLoader.TournamentSaveCallbackFactory(tournaments_storage_directory);
+    t.setSaveCallback(saveCallback);
+    t.save();
+    res.redirect('/tournaments/' + tournament_name + '/');
   }
 });
 
-router.get('/:tid/players', function(req, res) {
-  load(req.params.tid, function(full_tournament_filename) {
-    var playersNames = players.getPlayersIn(full_tournament_filename, function(playersNames) {
-      debug("Player names are: " + playersNames);
-      res.render('tournaments-players', { tournament: req.params.tid, players: playersNames })
-    });
-  });
-});
+router.get('/:tid/', function(req, res) {
+  var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
 
-function load(id, fn){
-  debug("Was told to load tournament: " + id);
-  var full_tournament_filename = path.join(tournaments_storage_directory, id + tournaments_extension);
-  debug("Will look for tournament file in: " + full_tournament_filename);
-  fn(full_tournament_filename);
-}
+  console.log("Will load " + req.params.tid);
+
+  var callback = function(err, tournament) {
+    console.log("Callback invoked for " + req.params.tid);
+    console.log(util.inspect(tournament));
+    if (err != null) {
+      console.log("About to render tournament-get");
+      res.render('tournament-get', {tournament: tournament});
+    } else {
+      throw err;
+    }
+  }
+
+  loader(req.params.tid, null, callback);
+});
 
 module.exports = router;

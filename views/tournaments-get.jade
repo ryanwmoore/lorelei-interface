@@ -1,11 +1,12 @@
 extends layout
 
 block content
-  h1 Current Tournaments
+  h1 Ongoing Tournaments
   if tournaments.length > 0
     p Pick a tournament:
     ul
       each tournament_id in tournaments
-        li= tournament_id
+        li
+          a(href="/tournaments/#{tournament_id}") #{tournament_id}
   else
-    p No tournaments are available.
+    p No tournaments are occurring right now.
