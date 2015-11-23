@@ -74,12 +74,9 @@ router.get('/:tid/', function(req, res) {
 
   console.log("Will load " + req.params.tid);
 
-  var callback = function(err, tournament) {
-    console.log("Callback invoked for " + req.params.tid);
-    console.log(util.inspect(tournament));
-    if (err != null) {
-      console.log("About to render tournament-get");
-      res.render('tournament-get', {tournament: tournament});
+  var callback = function(err, t) {
+    if (err == null) {
+      res.render('tournament-get', {tournament: t});
     } else {
       throw err;
     }
