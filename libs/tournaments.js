@@ -76,7 +76,7 @@ router.get('/:tid/', function(req, res) {
 
   var callback = function(err, t) {
     if (err == null) {
-      res.render('tournament-get', {tournament: t});
+      res.render('tournament-get', {tournament: t, tournamentAsString: util.inspect(t)});
     } else {
       throw err;
     }
