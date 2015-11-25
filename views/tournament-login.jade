@@ -1,0 +1,14 @@
+extends tournament
+
+block tournament_content
+  h1 Login to #{tournament_id}
+  p By entering the tournament's password, you may manage the tournament (e.g., upload new rounds). Only tournament organizes need to know the tournament's password. Tournament participants only need to know their player ID and the tournament ID.
+
+  form(action="login", method="post", enctype="multipart/form_data")
+    label(for="tournament_password") Tournament Management Password
+    if password_warning
+      p.warning #{password_warning}
+    input(type="password", name="tournament_password", id="tournament_password")
+    input(type="hidden", name="tournament_id", id="tournament_id", value=tournament_id)
+
+    input(type='submit',name='submit',value='Submit')

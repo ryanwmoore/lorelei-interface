@@ -15,6 +15,14 @@ var router = express.Router();
 var tournaments_storage_directory = "tournament-storage";
 var tournaments_extension = ".tdf";
 
+function getPasswordFor(req, tid) {
+  if (req.session.logins && req.session.logins[tid]) {
+    return req.session.logins[tid];
+  } else {
+    return null;
+  }
+}
+
 /* GET home page. */
 router.get('/', function(req, res) {
   debug("Getting list of valid tournaments...");
@@ -69,20 +77,49 @@ router.post('/new', function(req, res) {
   }
 });
 
+router.get('/:tid/login', function(req, res) {
+  res.render('tournament-login', {tournament_id: req.params.tid});
+});
+
+router.post('/:tid/login', function(req, res) {
+  var tid = req.params.tid;
+  var password = req.body.tournament_password;
+
+  if (! req.session.logins) {
+    req.session.logins = {};
+  }
+
+  req.session.logins[tid] = password;
+
+  var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+  loader(tid, password, function(err, tournament) {
+    if (err) { throw err; }
+
+    if (tournament.verifyPassword()) {
+      res.redirect('/tournaments/' + tid + '/');
+    } else {
+      var password_warning = "Incorrect password";
+      debug("Login to " + tid + " failed");
+      res.render('tournament-login', {tournament_id: tid, password_warning: password_warning});
+    }
+  });
+});
+
 router.get('/:tid/', function(req, res) {
+  var tid = req.params.tid;
   var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
 
   console.log("Will load " + req.params.tid);
 
   var callback = function(err, t) {
-    if (err == null) {
-      res.render('tournament-get', {tournament: t, tournamentAsString: util.inspect(t)});
-    } else {
-      throw err;
-    }
+    if (err) { throw err; }
+
+    var tournamentManager = t.verifyPassword();
+
+    res.render('tournament-get', {tournament_id: tid, tournament: t, tournamentAsString: util.inspect(t), tournamentManager: tournamentManager});
   }
 
-  loader(req.params.tid, null, callback);
+  loader(req.params.tid, getPasswordFor(req, tid), callback);
 });
 
 module.exports = router;

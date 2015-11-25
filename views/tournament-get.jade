@@ -1,8 +1,10 @@
-extends layout
+extends tournament
 
-block content
+block tournament_content
   if tournament.description
     h1 #{tournament.description}
   else
     h1 #{tournament.data.id}
   code= tournamentAsString
+  if tournamentManager
+    p You are a manager of this tournament. You may upload new rounds, change the tournament title, and change the look+feel of the tournament's page.
