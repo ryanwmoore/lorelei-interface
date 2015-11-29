@@ -10,8 +10,8 @@ block tournament_content
     p You are a manager of this tournament. You may upload new rounds, change the tournament title, and change the look+feel of the tournament's page.
     ul
       li
-        a(href="/tournaments/#{tournament_id}/upload") Upload a new round
-  if activeUpload
-    p Round information:
+        a(href="/tournaments/#{tournament.getId()}/upload") Upload a new round
+  if tournament.getActiveUpload()
+    p Round information (updated #[span.localDate #{tournament.getActiveUpload().date}]):
   else
     p.information No round is currently active.

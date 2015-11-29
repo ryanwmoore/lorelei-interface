@@ -47,6 +47,7 @@ router.get('/new', function(req, res) {
 
 router.post('/new', function(req, res) {
   warnings = {};
+
   if (req.body.tournament_new_password.length <= 0) {
     warnings['tournament_password_warning'] = 'Enter a password.'
   }
@@ -81,7 +82,14 @@ router.post('/new', function(req, res) {
 });
 
 router.get('/:tid/login', function(req, res) {
-  res.render('tournament-login', {tournament_id: req.params.tid});
+  var tid = req.params.tid;
+  var password = getPasswordFor(req, tid);
+
+  var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+  loader(tid, password, function(err, tournament) {
+    if (err) { throw err; }
+    res.render('tournament-login', {tournament: tournament});
+  });
 });
 
 router.post('/:tid/login', function(req, res) {
@@ -103,7 +111,7 @@ router.post('/:tid/login', function(req, res) {
     } else {
       var password_warning = "Incorrect password";
       debug("Login to " + tid + " failed");
-      res.render('tournament-login', {tournament_id: tid, password_warning: password_warning});
+      res.render('tournament-login', {password_warning: password_warning, tournament: tournament});
     }
   });
 });
@@ -124,7 +132,7 @@ router.get('/:tid/upload', function(req, res) {
   var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
   loader(tid, password, function(err, tournament) {
     if (err) { throw err; }
-    res.render('tournament-upload', {tournament_id: tid, tournament: tournament});
+    res.render('tournament-upload', {tournament: tournament});
   });
 });
 
@@ -144,7 +152,7 @@ router.post('/:tid/upload', upload.single('round_data'), function(req, res) {
         tournament.save();
         res.redirect("/tournaments/#{tid}/");
       } else {
-        res.render('tournament-upload', {tournament_id: tid, tournament: tournament, message: err.message});
+        res.render('tournament-upload', {tournament: tournament, message: err.message});
       }
     }, setToNewRound);
 
@@ -155,16 +163,10 @@ router.get('/:tid/', function(req, res) {
   var tid = req.params.tid;
   var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
 
-  console.log("Will load " + req.params.tid);
-
   var callback = function(err, t) {
     if (err) { throw err; }
 
-    var activeUpload = t.getActiveUpload();
-
     res.render('tournament-get', {
-      activeUpload: activeUpload,
-      tournament_id: tid,
       tournament: t,
       tournamentAsString: util.inspect(t)
     });

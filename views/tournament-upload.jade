@@ -1,7 +1,7 @@
 extends tournament
 
 block tournament_content
-  h1 Upload a new round for #{tournament.data.id}
+  h1 Upload a new round for #{tournament.getId()}
   if tournament.passwordIsCorrect
     form(action="upload", method="post", enctype="multipart/form-data")
 
@@ -19,6 +19,6 @@ block tournament_content
       input(type='submit',name='submit',value='Submit')
   else
     p.warning You must be a
-      a(href="/tournaments/#{tournament_id}/login") tournament manager
+      a(href="/tournaments/#{tournament.getId()}/login") tournament manager
       to upload a new round.
   p
