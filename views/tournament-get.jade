@@ -23,11 +23,22 @@ block tournament_content
     if rounds.length > 0
       each round in rounds.reverse()
         h4 Round #{round.getNumber()}
-        each match in round.getMatches()
-          if match.isBye()
-            h5 #{match.getPlayerViaRoster(roster, null).toJson().name} &mdash; bye
-          else
-            h5 Table #{match.getTableNumber()}: #{match.getPlayerViaRoster(roster, 1).toJson().name} vs. #{match.getPlayerViaRoster(roster, 2).toJson().name}
+        table.matchups
+          tr
+            th Table
+            th Player 1
+            th Player 2
+
+          each match in round.getMatches()
+            if match.isBye()
+              tr.bye
+                td bye
+                td(colspan=2) #{match.getPlayerViaRoster(roster, null).toJson().name}
+            else
+              tr
+                td.table #{match.getTableNumber()}
+                td #{match.getPlayerViaRoster(roster, 1).toJson().name}
+                td #{match.getPlayerViaRoster(roster, 2).toJson().name}
     else
       p No rounds.
   else

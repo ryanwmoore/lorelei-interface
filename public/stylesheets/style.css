@@ -14,3 +14,20 @@ a {
 .information {
   color: #888800;
 }
+
+span.versus::after {
+  content: "vs";
+  color: #aaa;
+}
+
+table.matchups td, table.matchups th {
+  border: 1px solid gray;
+}
+
+table.matchups tr.bye {
+  text-align: center;
+}
+
+table.matchups td.table {
+  text-align: center;
+}
