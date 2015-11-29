@@ -4,7 +4,7 @@ block content
   h1 Create a new tournament
   p After the tournament is created, you will be able to upload tournament results and/or rosters.
 
-  form(action="new", method="post", enctype="multipart/form_data")
+  form(action="new", method="post", enctype="multipart/form-data")
     label(for="tournament_new_id") Tournament ID
     input(type="text", name="tournament_new_id", id="tournament_new_id", value=form['tournament_new_id'])
     if warnings && warnings['tournament_id_warning']
