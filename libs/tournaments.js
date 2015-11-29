@@ -168,11 +168,22 @@ router.get('/:tid/', function(req, res) {
 
     var getCurrentPlayerListCallback = function(err, playerList) {
       if (err) { throw err; }
-      res.render('tournament-get', {
-        precomputedPlayerList: playerList,
-        tournament: t,
-        tournamentAsString: util.inspect(t)
-      });
+
+      var getCurrentTournamentParserCallback = function(err, tournamentParser) {
+        if (err) { throw err; }
+
+        res.render('tournament-get', {
+          precomputedPlayerList: playerList,
+          tournament: t,
+          tournamentAsString: util.inspect(t),
+          tournamentParser: tournamentParser,
+
+          rounds: tournamentParser.getRounds(),
+          roster: tournamentParser.getPlayers()
+        });
+      }
+
+      t.getCurrentTournamentParser(getCurrentTournamentParserCallback);
     }
 
     t.getCurrentPlayerList(getCurrentPlayerListCallback);
