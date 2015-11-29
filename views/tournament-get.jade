@@ -5,7 +5,7 @@ block tournament_content
     h1 #{tournament.data.description}
   else
     h1 #{tournament.data.id}
-  code= tournamentAsString
+
   if tournament.passwordIsCorrect()
     p You are a manager of this tournament. You may upload new rounds, change the tournament title, and change the look+feel of the tournament's page.
     ul
@@ -13,6 +13,13 @@ block tournament_content
         a(href="/tournaments/#{tournament.getId()}/upload") Upload a new round
   if tournament.getActiveUpload()
     h2 Round information
-    p Updated #[span.fromNowDate #{tournament.getActiveUpload().date}] (#[span.localDate #{tournament.getActiveUpload().date}])
+    h3 Last Update
+    p The tournament information was last updated #[span.fromNowDate #{tournament.getActiveUpload().date}] (#[span.localDate #{tournament.getActiveUpload().date}]).
+    if precomputedPlayerList.length > 0
+      h3 Roster
+      ol
+        each player in precomputedPlayerList
+          li= player.name
   else
     p.information No round is currently active.
+  code= tournamentAsString

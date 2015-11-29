@@ -163,16 +163,22 @@ router.get('/:tid/', function(req, res) {
   var tid = req.params.tid;
   var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
 
-  var callback = function(err, t) {
+  var loaderCallback = function(err, t) {
     if (err) { throw err; }
 
-    res.render('tournament-get', {
-      tournament: t,
-      tournamentAsString: util.inspect(t)
-    });
+    var getCurrentPlayerListCallback = function(err, playerList) {
+      if (err) { throw err; }
+      res.render('tournament-get', {
+        precomputedPlayerList: playerList,
+        tournament: t,
+        tournamentAsString: util.inspect(t)
+      });
+    }
+
+    t.getCurrentPlayerList(getCurrentPlayerListCallback);
   }
 
-  loader(req.params.tid, getPasswordFor(req, tid), callback);
+  loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);
 });
 
 module.exports = router;
