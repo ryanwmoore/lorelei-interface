@@ -1,7 +1,10 @@
 var debug = require('debug')('lorelei-interface:tournaments');
 var fs = require("fs");
+var multer = require("multer");
 var path = require("path");
 var util = require('util');
+
+var upload = multer({ dest: '/tmp/' });
 
 var tournament = require('lorelei-base/tournament.js');
 var tournamentFileLoader = require('lorelei-base/tournamentFileLoader.js');
@@ -95,13 +98,56 @@ router.post('/:tid/login', function(req, res) {
   loader(tid, password, function(err, tournament) {
     if (err) { throw err; }
 
-    if (tournament.verifyPassword()) {
+    if (tournament.passwordIsCorrect()) {
       res.redirect('/tournaments/' + tid + '/');
     } else {
       var password_warning = "Incorrect password";
       debug("Login to " + tid + " failed");
       res.render('tournament-login', {tournament_id: tid, password_warning: password_warning});
     }
+  });
+});
+
+function getPasswordFor(req, tid) {
+  if (! req.session.logins) {
+    return undefined;
+  }
+
+  return req.session.logins[tid];
+}
+
+
+router.get('/:tid/upload', function(req, res) {
+  var tid = req.params.tid;
+  var password = getPasswordFor(req, tid);
+
+  var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+  loader(tid, password, function(err, tournament) {
+    if (err) { throw err; }
+    res.render('tournament-upload', {tournament_id: tid, tournament: tournament});
+  });
+});
+
+router.post('/:tid/upload', upload.single('round_data'), function(req, res) {
+  var tid = req.params.tid;
+  var password = getPasswordFor(req, tid);
+
+  var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+  loader(tid, password, function(err, tournament) {
+    if (err) { throw err; }
+
+    var setToNewRound = req.body.set_to_new_round == 'on';
+    var uploadAsString = fs.readFileSync(req.file.path, "utf-8");
+
+    tournament.addUpload(uploadAsString, function(err, tournament) {
+      if (! err) {
+        tournament.save();
+        res.redirect("/tournaments/#{tid}/");
+      } else {
+        res.render('tournament-upload', {tournament_id: tid, tournament: tournament, message: err.message});
+      }
+    }, setToNewRound);
+
   });
 });
 
@@ -114,9 +160,14 @@ router.get('/:tid/', function(req, res) {
   var callback = function(err, t) {
     if (err) { throw err; }
 
-    var tournamentManager = t.verifyPassword();
+    var activeUpload = t.getActiveUpload();
 
-    res.render('tournament-get', {tournament_id: tid, tournament: t, tournamentAsString: util.inspect(t), tournamentManager: tournamentManager});
+    res.render('tournament-get', {
+      activeUpload: activeUpload,
+      tournament_id: tid,
+      tournament: t,
+      tournamentAsString: util.inspect(t)
+    });
   }
 
   loader(req.params.tid, getPasswordFor(req, tid), callback);

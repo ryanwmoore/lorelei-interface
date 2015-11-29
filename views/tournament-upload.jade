@@ -1,0 +1,24 @@
+extends tournament
+
+block tournament_content
+  h1 Upload a new round for #{tournament.data.id}
+  if tournament.passwordIsCorrect
+    form(action="upload", method="post", enctype="multipart/form-data")
+
+      if message
+        p.warning #{message}
+
+      label(for="round_data") Select the .tdf to upload
+      input(type="file", name="round_data", id="round_data")
+      br
+
+      label(for="set_to_new_round") Make this upload the current round
+      input(type="checkbox", name="set_to_new_round", id="set_to_new_round", checked="checked")
+      br
+
+      input(type='submit',name='submit',value='Submit')
+  else
+    p.warning You must be a
+      a(href="/tournaments/#{tournament_id}/login") tournament manager
+      to upload a new round.
+  p

@@ -1,8 +1,9 @@
 extends layout
 
 block content
-  ul
-    li
-      a(href="/tournaments/#{tournament_id}/login") manage
+  if ! tournament.passwordIsCorrect()
+    ul
+      li
+        a(href="/tournaments/#{tournament_id}/login") manage
   block tournament_content
   p Project Lorelei Tournament Management System

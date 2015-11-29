@@ -1,10 +1,17 @@
 extends tournament
 
 block tournament_content
-  if tournament.description
-    h1 #{tournament.description}
+  if tournament.data.description
+    h1 #{tournament.data.description}
   else
     h1 #{tournament.data.id}
   code= tournamentAsString
-  if tournamentManager
+  if tournament.passwordIsCorrect()
     p You are a manager of this tournament. You may upload new rounds, change the tournament title, and change the look+feel of the tournament's page.
+    ul
+      li
+        a(href="/tournaments/#{tournament_id}/upload") Upload a new round
+  if activeUpload
+    p Round information:
+  else
+    p.information No round is currently active.
