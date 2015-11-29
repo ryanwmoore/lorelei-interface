@@ -12,6 +12,7 @@ block tournament_content
       li
         a(href="/tournaments/#{tournament.getId()}/upload") Upload a new round
   if tournament.getActiveUpload()
-    p Round information (updated #[span.localDate #{tournament.getActiveUpload().date}]):
+    h2 Round information
+    p Updated #[span.fromNowDate #{tournament.getActiveUpload().date}] (#[span.localDate #{tournament.getActiveUpload().date}])
   else
     p.information No round is currently active.
