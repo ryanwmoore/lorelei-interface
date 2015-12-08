@@ -192,4 +192,30 @@ router.get('/:tid/', function(req, res) {
   loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);
 });
 
+router.get('/:tid/information', function (req, res) {
+    var tid = req.params.tid;
+    var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+
+    var loaderCallback = function (err, t) {
+        if (err) { throw err; }
+
+        var buildJsonRepresentationCallback = function (err, jsonRepresentation) {
+            if (err) { throw err; }
+
+            res.format({
+                json: function () {
+                    res.send({ information: t.tournamentAsJson() });
+                },
+                'default': function () {
+                    res.status(406).send('Not Acceptable');
+                }
+            });
+        }
+
+        t.buildJsonRepresentation(getCurrentPlayerListCallback);
+    }
+
+    loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);
+});
+
 module.exports = router;
