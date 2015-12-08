@@ -1,2 +1,7 @@
 node_modules
 npm-debug*
+.ntvs_analysis.dat
+.vs
+bin
+*.njsproj
+obj
