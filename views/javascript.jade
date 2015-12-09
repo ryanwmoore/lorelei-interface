@@ -1,18 +1,56 @@
 script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js', type='text/javascript')
 script(src='http://code.jquery.com/jquery-2.1.4.min.js', type='text/javascript')
 script(type='text/javascript').
-  $( document ).ready( function() {
-    function asMoment(dateString) {
-      return moment(new Date(dateString));
-    }
+  var originalDateKey = "originalDate";
 
+  function asMoment(dateString) {
+    return moment(new Date(dateString));
+  }
+
+  function applyFormatTo(node, formatString) {
+    var dateMoment = $(node).data(originalDateKey);
+
+    if (formatString) {
+      $(node).text(dateMoment.format(formatString));
+    } else {
+      $(node).text(dateMoment.fromNow());
+    }
+  }
+
+  function saveOriginalDate(node) {
+    $(node).data(originalDateKey, asMoment($(node).text()));
+  }
+
+  function saveAllOriginalDates() {
     $("span.localDate").each(function() {
-      var dateMoment = asMoment($(this).text());
-      $(this).text(dateMoment.format("llll"));
+      saveOriginalDate($(this));
     });
 
     $("span.fromNowDate").each(function() {
-      var dateMoment = asMoment($(this).text());
-      $(this).text(dateMoment.fromNow());
+      saveOriginalDate($(this));
     });
+  }
+
+  function updateDates() {
+    $("span.localDate").each(function() {
+      applyFormatTo($(this), "llll");
+    });
+
+    $("span.fromNowDate").each(function() {
+      applyFormatTo($(this));
+    });
+  }
+
+  function reformatDatesAfterSavingOriginalDateInformation() {
+    saveAllOriginalDates();
+
+    updateDates();
+
+    setInterval(function() {
+      updateDates();  
+    }, 15000);
+  }
+
+  $( document ).ready( function() {
+    reformatDatesAfterSavingOriginalDateInformation();
   });
