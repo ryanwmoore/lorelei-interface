@@ -5,3 +5,5 @@ npm-debug*
 bin
 *.njsproj
 obj
+*.sln
+*.tmp
