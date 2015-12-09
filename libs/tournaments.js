@@ -159,37 +159,25 @@ router.post('/:tid/upload', upload.single('round_data'), function(req, res) {
   });
 });
 
-router.get('/:tid/', function(req, res) {
-  var tid = req.params.tid;
-  var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
-
-  var loaderCallback = function(err, t) {
-    if (err) { throw err; }
-
-    var getCurrentPlayerListCallback = function(err, playerList) {
-      if (err) { throw err; }
-
-      var getCurrentTournamentParserCallback = function(err, tournamentParser) {
-        if (err) { throw err; }
-
-        res.render('tournament-get', {
-          precomputedPlayerList: playerList,
-          tournament: t,
-          tournamentAsString: util.inspect(t),
-          tournamentParser: tournamentParser,
-
-          rounds: tournamentParser.getRounds(),
-          roster: tournamentParser.getPlayers()
-        });
-      }
-
-      t.getCurrentTournamentParser(getCurrentTournamentParserCallback);
+router.get('/:tid/', function (req, res) {
+    var tid = req.params.tid;
+    var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+    
+    var loaderCallback = function (err, t) {
+        var buildJsonRepresentationCallback = function (err, json) {
+            if (err) { throw err; }
+            
+            res.render('tournament-get', {
+                tournamentJsonString: util.inspect(json, { depth: null }),
+                tournamentJson: json,
+                tournament: t,
+                tournamentAsString: util.inspect(t),
+            });
+        }
+        t.buildJsonRepresentation(buildJsonRepresentationCallback);
     }
-
-    t.getCurrentPlayerList(getCurrentPlayerListCallback);
-  }
-
-  loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);
+    
+    loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);
 });
 
 router.get('/:tid/information', function (req, res) {
@@ -204,7 +192,7 @@ router.get('/:tid/information', function (req, res) {
 
             res.format({
                 json: function () {
-                    res.send({ information: t.tournamentAsJson() });
+                    res.send({ information: jsonRepresentation });
                 },
                 'default': function () {
                     res.status(406).send('Not Acceptable');
@@ -212,7 +200,7 @@ router.get('/:tid/information', function (req, res) {
             });
         }
 
-        t.buildJsonRepresentation(getCurrentPlayerListCallback);
+        t.buildJsonRepresentation(buildJsonRepresentationCallback);
     }
 
     loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);

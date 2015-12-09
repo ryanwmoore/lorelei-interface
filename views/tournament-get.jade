@@ -11,36 +11,9 @@ block tournament_content
     ul
       li
         a(href="/tournaments/#{tournament.getId()}/upload") Upload a new round
-  if tournament.getActiveUpload()
+  if tournamentJson.modified
     h2 Round information
     h3 Last Update
-    p The tournament information was last updated #[span.fromNowDate #{tournament.getActiveUpload().date}] (#[span.localDate #{tournament.getActiveUpload().date}]).
-    if precomputedPlayerList.length > 0
-      h3 Roster
-      ol
-        each player in precomputedPlayerList
-          li= player.name
-    if rounds.length > 0
-      each round in rounds.reverse()
-        h4 Round #{round.getNumber()}
-        table.matchups
-          tr
-            th Table
-            th Player 1
-            th Player 2
-
-          each match in round.getMatches()
-            if match.isBye()
-              tr.bye
-                td bye
-                td(colspan=2) #{match.getPlayerViaRoster(roster, null).toJson().name}
-            else
-              tr
-                td.table #{match.getTableNumber()}
-                td #{match.getPlayerViaRoster(roster, 1).toJson().name}
-                td #{match.getPlayerViaRoster(roster, 2).toJson().name}
-    else
-      p No rounds.
-  else
-    p.information No round is currently active.
+    p The tournament information was last updated #[span.fromNowDate #{tournamentJson.modified}] (#[span.localDate #{tournamentJson.modified}]).
+  code= tournamentJsonString
   code= tournamentAsString
