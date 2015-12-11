@@ -11,9 +11,11 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
+var compression = require('compression')
 
 var app = express();
 
+app.use(compression())
 app.use(morgan('combined'))
 
 app.use(session({
