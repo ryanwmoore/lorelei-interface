@@ -1,17 +1,18 @@
+var bodyParser = require('body-parser');
+var compression = require('compression')
+var cookieParser = require('cookie-parser');
 var debug = require('debug')('lorelei:app');
 var express = require('express');
-var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var util = require('util');
 var morgan = require('morgan')
+var path = require('path');
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var session = require('express-session');
+var users = require('./routes/users');
+var util = require('util');
+
 var FileStore = require('session-file-store')(session);
-var compression = require('compression')
 
 var app = express();
 
