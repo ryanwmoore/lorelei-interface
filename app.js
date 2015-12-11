@@ -7,9 +7,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var morgan = require('morgan')
 var path = require('path');
-var routes = require('./routes/index');
 var session = require('express-session');
-var users = require('./routes/users');
+var tournaments = require('./libs/tournaments');
 var util = require('util');
 
 var FileStore = require('session-file-store')(session);
@@ -38,10 +37,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
-
-var tournaments = require('./libs/tournaments');
 app.use('/tournaments/', tournaments);
 
 // catch 404 and forward to error handler
