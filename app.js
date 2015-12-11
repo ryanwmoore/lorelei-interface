@@ -6,14 +6,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var util = require('util');
-
+var morgan = require('morgan')
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 
 var app = express();
+
+app.use(morgan('combined'))
 
 app.use(session({
     store: new FileStore(),
