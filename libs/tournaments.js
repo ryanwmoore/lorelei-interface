@@ -164,6 +164,8 @@ router.get('/:tid/', function (req, res) {
     var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
     
     var loaderCallback = function (err, t) {
+        if (err) { throw err; }
+
         var buildJsonRepresentationCallback = function (err, json) {
             if (err) { throw err; }
             
