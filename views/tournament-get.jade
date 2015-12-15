@@ -1,8 +1,8 @@
 extends tournament
 
 block tournament_content
-  if tournament.data.description
-    h1 #{tournament.data.description}
+  if tournament.data.title
+    h1 #{tournament.data.title}
   else
     h1 #{tournament.data.id}
 
