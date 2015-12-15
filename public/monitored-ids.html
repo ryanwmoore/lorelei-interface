@@ -1,0 +1,51 @@
+﻿<div ng-controller="MonitoredIDsController">
+    Use this page to add and/or remove POP Player IDs that you are interested in. When viewing tournament results or matches, these IDs will be highlighted. Monitoring IDs is useful to quickly find your own results, those of a friend, or those of your child. You can monitor an unlimited number of IDs.
+    <li ng-repeat="id in ids">
+        <span><span ng-click="remove(id)">-</span><span class="monitored-id">{{id}}</span></span>
+    </li>
+
+    <p>
+        You are monitoring
+        <ng-pluralize count="ids.length"
+                      when="{'0': 'no IDs',
+                         'one': 'an ID',
+                       'other': '{} IDs'}">
+        </ng-pluralize>.
+    </p>
+
+    <form ng-submit="saveIds()">
+        <input class="btn-primary" type="submit" value="Save Changes">
+    </form>
+
+    <form ng-submit="addId()">
+        <input type="text" size="15" placeholder="enter ID" value="" ng-model="newID">
+        <span ng-show="form.newID.$error.integer">Not a valid POP Player ID! POP Player IDs only have numbers in them. For example: 729975</span>
+        <input class="btn-primary" type="submit" value="monitor new">
+    </form>
+
+    <input type="button" ng-click="reset()" value="Reset monitored IDs" />
+
+    <pre>ids = {{ids | json}}</pre>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script>
+  angular.module('monitoredIDs', [])
+    .controller('MonitoredIDsController', ['$scope', function($scope) {
+      $scope.ids = [];
+
+      $scope.remove = function(id) {
+        $scope.ids = _.without($scope.ids, id);
+      }
+
+      $scope.reset = function() {
+        $scope.ids = [];
+      };
+
+      $scope.addId = function() {
+        $scope.ids.push(parseInt($scope.newID));
+        $scope.ids = _.sortBy($scope.ids, function(id) { return id; });
+        $scope.ids = _.uniq($scope.ids, true);
+      };
+    }]);
+</script>

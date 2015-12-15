@@ -31,3 +31,8 @@ table.matchups tr.bye {
 table.matchups td.table {
   text-align: center;
 }
+
+.monitored-id {
+    font-weight: bold;
+    color: green;
+}
