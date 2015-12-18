@@ -4,9 +4,10 @@ html(ng-app="monitoredIDs")
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    div.header
+      include navigation.jade
     block content
     div.footer
-      p #[a(href="/tournaments/new") start a new tournament]
-      p #[a(href="/tournaments/") view ongoing tournaments]
+      include navigation.jade
 
     include javascript.jade

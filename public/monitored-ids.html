@@ -46,6 +46,7 @@
         $scope.ids.push(parseInt($scope.newID));
         $scope.ids = _.sortBy($scope.ids, function(id) { return id; });
         $scope.ids = _.uniq($scope.ids, true);
+        $scope.newID = "";
       };
     }]);
 </script>
