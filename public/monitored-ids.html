@@ -14,7 +14,8 @@
     </p>
 
     <form ng-submit="saveIds()">
-        <input class="btn-primary" type="submit" value="Save Changes">
+
+        <input type="submit" class="btn btn-primary" value="Save Changes" uib-btn />
         <div ng-show="upToDate">Changes are saved</div>
         <div ng-hide="upToDate">Click "Save" to save changes</div>
     </form>
@@ -30,9 +31,10 @@
     <pre>ids = {{ids | json}}</pre>
 </div>
 <script src="/angular/angular.min.js"></script>
+<script src="/angular-ui-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="/underscore/underscore-min.js"></script>
 <script>
-    angular.module('monitoredIDs', [])
+    angular.module('monitoredIDs', ['ui.bootstrap'])
       .controller('MonitoredIDsController', function ($scope, $http) {
 
           $scope.ids = [];
@@ -42,7 +44,7 @@
               $scope.ids = response.data;
               $scope.upToDate = true;
           }, function errorCallback(response) {
-              //TODO
+              //TODO?
           });
 
           $scope.remove = function (id) {
