@@ -1,32 +1,31 @@
 ﻿<div ng-controller="MonitoredIDsController">
-    Use this page to add and/or remove POP Player IDs that you are interested in. When viewing tournament results or matches, these IDs will be highlighted. Monitoring IDs is useful to quickly find your own results, those of a friend, or those of your child. You can monitor an unlimited number of IDs.
-    <li ng-repeat="id in ids">
-        <span><span ng-click="remove(id)">-</span><span class="monitored-id">{{id}}</span></span>
+    <p>Use this page to add and/or remove POP Player IDs that you are interested in. When viewing tournament results or matches, these IDs will be highlighted. Monitoring IDs is useful to quickly find your own results, those of a friend, or those of your child. You can monitor an unlimited number of IDs.</p>
+    <li ng-repeat="id in ids" style="list-style-type: none;">
+        <span><span ng-click="remove(id)" class="glyphicon glyphicon-minus"></span><span class="monitored-id">{{id}}</span></span>
     </li>
 
     <p>
         You are monitoring
         <ng-pluralize count="ids.length"
                       when="{'0': 'no IDs',
-                         'one': 'an ID',
+                         'one': '{} ID',
                        'other': '{} IDs'}">
         </ng-pluralize>.
     </p>
 
     <form ng-submit="saveIds()">
-
-        <input type="submit" class="btn btn-primary" value="Save Changes" uib-btn />
-        <div ng-show="upToDate">Changes are saved</div>
-        <div ng-hide="upToDate">Click "Save" to save changes</div>
+        <input ng-hide="upToDate" type="submit" class="btn btn-danger" value="Save Changes" uib-btn />
+        <div ng-show="upToDate">In any tournament, the above IDs will be displayed prominently by your browser.</div>
+        <div ng-hide="upToDate" class="bg-danger">Click "Save" to save changes</div>
     </form>
 
     <form ng-submit="addId()">
-        <input type="text" size="15" placeholder="enter ID" value="" ng-model="newID">
+        <input type="text" size="15" placeholder="Enter ID" value="" ng-model="newID">
         <span ng-show="form.newID.$error.integer">Not a valid POP Player ID! POP Player IDs only have numbers in them. For example: 729975</span>
-        <input class="btn-primary" type="submit" value="monitor new">
+        <input class="btn btn-primary" type="submit" value="Monitor New ID">
     </form>
 
-    <input type="button" ng-click="reset()" value="Reset monitored IDs" />
+    <input type="button" class="btn btn-warning" ng-click="reset()" value="Reset monitored IDs" />
 
     <pre>ids = {{ids | json}}</pre>
 </div>
@@ -50,11 +49,13 @@
           $scope.remove = function (id) {
               $scope.ids = _.without($scope.ids, id);
               $scope.upToDate = false;
+              $scope.saveIds();
           }
 
           $scope.reset = function () {
               $scope.ids = [];
               $scope.upToDate = false;
+              $scope.saveIds();
           };
 
           $scope.addId = function () {
@@ -67,6 +68,7 @@
               $scope.ids = _.uniq($scope.ids, true);
               $scope.newID = "";
               $scope.upToDate = false;
+              $scope.saveIds();
           };
 
           $scope.saveIds = function () {
