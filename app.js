@@ -16,6 +16,9 @@ var FileStore = require('session-file-store')(session);
 
 var app = express();
 
+app.use('/angular', express.static('./node_modules/angular/'));
+app.use('/underscore', express.static('./node_modules/underscore/'));
+
 app.use(compression())
 app.use(morgan('combined'))
 
