@@ -1,14 +1,14 @@
 doctype html
-html(ng-app="monitoredIDs")
+html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    include javascript-header.jade
   body
     div.header
       include navigation.jade
     block content
     div.footer
-      include navigation.jade
 
     include javascript.jade

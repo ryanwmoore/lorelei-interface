@@ -1,3 +1,21 @@
-﻿div #[a(href="/tournaments/new") start a new tournament]
-div #[a(href="/tournaments/") view ongoing tournaments]
-div #[a(href="/players/") monitor player progress]
+nav(class="navbar navbar-default" ng-controller="NavigationController" id="navigation")
+  div(class="container-fluid")
+    div(class="navbar-header").
+      <button type="button" class="navbar-toggle collapsed" ng-init="navbarCollapsed=true" ng-click="navbarCollapsed = !navbarCollapsed" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Lorelei</a>
+
+    div(class="collapse navbar-collapse" uib-collapse="navbarCollapsed")
+      ul(class="nav navbar-nav")
+        li #[a(href="/players/") monitor player progress]
+        li(role="separator",class="divider")
+        li #[a(href="/tournaments/new") start a tournament]
+        li #[a(href="/tournaments/") view ongoing tournaments]
+script(type='text/javascript').
+  var navigationApp = angular.module('Lorelei', ['ui.bootstrap']);
+  navigationApp.controller("NavigationController", ['$scope', function($scope) {}]);
+  angular.bootstrap($("#navigation"), ['Lorelei']);

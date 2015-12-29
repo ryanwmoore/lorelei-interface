@@ -1,4 +1,4 @@
-﻿<div ng-controller="MonitoredIDsController">
+﻿<div id="monitoredIDsRoot" ng-controller="MonitoredIDsController">
     <p>Use this page to add and/or remove POP Player IDs that you are interested in. When viewing tournament results or matches, these IDs will be highlighted. Monitoring IDs is useful to quickly find your own results, those of a friend, or those of your child. You can monitor an unlimited number of IDs.</p>
     <li ng-repeat="id in ids" style="list-style-type: none;">
         <span><span ng-click="remove(id)" class="glyphicon glyphicon-minus"></span><span class="monitored-id">{{id}}</span></span>
@@ -14,9 +14,8 @@
     </p>
 
     <form ng-submit="saveIds()">
-        <input ng-hide="upToDate" type="submit" class="btn btn-danger" value="Save Changes" uib-btn />
         <div ng-show="upToDate">In any tournament, the above IDs will be displayed prominently by your browser.</div>
-        <div ng-hide="upToDate" class="bg-danger">Click "Save" to save changes</div>
+        <div ng-hide="upToDate" class="bg-danger">Please wait for your changes to be saved...</div>
     </form>
 
     <form ng-submit="addId()">
@@ -29,54 +28,52 @@
 
     <pre>ids = {{ids | json}}</pre>
 </div>
-<script src="/angular/angular.min.js"></script>
-<script src="/angular-ui-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="/underscore/underscore-min.js"></script>
 <script>
-    angular.module('monitoredIDs', ['ui.bootstrap'])
-      .controller('MonitoredIDsController', function ($scope, $http) {
+  var monitoredIDsApp = angular.module('MonitoredIDsApp', ['ui.bootstrap']);
+  monitoredIDsApp.controller('MonitoredIDsController', ['$scope', '$http', function ($scope, $http) {
+    $scope.ids = [];
+    $scope.upToDate = false;
 
-          $scope.ids = [];
-          $scope.upToDate = false;
+    $http.get(ids_url).then(function successCallback(response) {
+        $scope.ids = response.data;
+        $scope.upToDate = true;
+    }, function errorCallback(response) {
+        //TODO?
+    });
 
-          $http.get(ids_url).then(function successCallback(response) {
-              $scope.ids = response.data;
-              $scope.upToDate = true;
-          }, function errorCallback(response) {
-              //TODO?
-          });
+    $scope.remove = function (id) {
+        $scope.ids = _.without($scope.ids, id);
+        $scope.upToDate = false;
+        $scope.saveIds();
+    }
 
-          $scope.remove = function (id) {
-              $scope.ids = _.without($scope.ids, id);
-              $scope.upToDate = false;
-              $scope.saveIds();
-          }
+    $scope.reset = function () {
+        $scope.ids = [];
+        $scope.upToDate = false;
+        $scope.saveIds();
+    };
 
-          $scope.reset = function () {
-              $scope.ids = [];
-              $scope.upToDate = false;
-              $scope.saveIds();
-          };
+    $scope.addId = function () {
+        var valid_id_regexp = /^[0-9]+$/;
+        if (!$scope.newID.match(valid_id_regexp)) {
+            return;
+        }
+        $scope.ids.push(parseInt($scope.newID));
+        $scope.ids = _.sortBy($scope.ids, function (id) { return id; });
+        $scope.ids = _.uniq($scope.ids, true);
+        $scope.newID = "";
+        $scope.upToDate = false;
+        $scope.saveIds();
+    };
 
-          $scope.addId = function () {
-              var valid_id_regexp = /^[0-9]+$/;
-              if (!$scope.newID.match(valid_id_regexp)) {
-                  return;
-              }
-              $scope.ids.push(parseInt($scope.newID));
-              $scope.ids = _.sortBy($scope.ids, function (id) { return id; });
-              $scope.ids = _.uniq($scope.ids, true);
-              $scope.newID = "";
-              $scope.upToDate = false;
-              $scope.saveIds();
-          };
-
-          $scope.saveIds = function () {
-              $http.post(ids_url, { ids: $scope.ids }).then(function successCallback(response) {
-                  $scope.upToDate = true;
-              }, function errorCallback(response) {
-                  //TODO
-              });
-          }
-      });
+    $scope.saveIds = function () {
+        $http.post(ids_url, { ids: $scope.ids }).then(function successCallback(response) {
+            $scope.upToDate = true;
+        }, function errorCallback(response) {
+            //TODO
+        });
+    }
+  }]);
+  angular.bootstrap($("#monitoredIDsRoot"), ['MonitoredIDsApp']);
 </script>
