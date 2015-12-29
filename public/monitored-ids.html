@@ -1,32 +1,56 @@
 ﻿<div id="monitoredIDsRoot" ng-controller="MonitoredIDsController">
-    <p>
-        <strong>You are monitoring
-        <ng-pluralize count="ids.length"
-                      when="{'0': 'no IDs',
-                         'one': '{} ID',
-                       'other': '{} IDs'}">
-        </ng-pluralize>.</strong>
-    </p>
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+          <strong>You are monitoring
+          <ng-pluralize count="ids.length"
+                        when="{'0': 'no IDs',
+                           'one': '{} ID',
+                         'other': '{} IDs'}">
+          </ng-pluralize>.</strong>
+      </p>
+    </div>
+  </div>
 
-    <li ng-repeat="id in ids" class="monitored-id">
-        <span ng-click="remove(id)" class="glyphicon glyphicon-remove"></span> <span class="monitored-id">{{id}}</span>
-    </li>
+  <div class="row">
+    <div class="col-xs-6">
+      <li ng-repeat="id in ids" class="monitored-id">
+          <span ng-click="remove(id)" class="glyphicon glyphicon-remove"></span> <span class="monitored-id">{{id}}</span>
+      </li>
+    </div>
+  </div>
 
-    <form ng-submit="saveIds()">
-        <div ng-show="upToDate &amp;&amp; ids.length > 0">In any tournament, the above IDs will be displayed prominently in your browser.</div>
-        <div ng-hide="upToDate" class="bg-danger">Please wait for your changes to be saved...</div>
-    </form>
+  <div class="row">
+    <div class="col-xs-12">
+      <form ng-submit="saveIds()">
+          <div ng-show="upToDate &amp;&amp; ids.length > 0">In any tournament, the above IDs will be displayed prominently in your browser.</div>
+          <div ng-hide="upToDate" class="bg-danger">Please wait for your changes to be saved...</div>
+      </form>
+  </div>
+  </div>
 
+  <div class="row">
     <form ng-submit="addId()">
-        <input type="text" size="15" placeholder="Enter ID" value="" ng-model="newID">
-        <span ng-show="newID.$error.integer">Not a valid POP Player ID! POP Player IDs only have numbers in them. For example: 729975</span>
-        <br />
-        <input class="btn btn-primary" type="submit" value="Monitor">
+        <div class="col-xs-12">
+          <input type="text" size="15" placeholder="Enter ID" value="" ng-model="newID">
+          <span ng-show="newID.$error.integer">Not a valid POP Player ID! POP Player IDs only have numbers in them. For example: 729975</span>
+        </div>
+        <div class="col-xs-12">
+          <input class="btn btn-primary" type="submit" value="Monitor">
+        </div>
     </form>
-    <br />
-    <input type="button" ng-show="ids.length > 0" class="btn btn-warning" ng-click="reset()" value="Remove Monitored IDs" />
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <br />
+      <input type="button" ng-show="ids.length > 0" class="btn btn-warning" ng-click="reset()" value="Remove Monitored IDs" />
+    </div>
 
-    <p>Add/remove POP Player IDs that you are interested in. When viewing tournaments, the IDs will be highlighted. This feature is useful to quickly view the matches of yourself, a friend, or your child.</p>
+    <div class="col-xs-12">
+      <br />
+      <p>Add/remove POP Player IDs that you are interested in. When viewing tournaments, the IDs will be highlighted. This feature is useful to quickly view the matches of yourself, a friend, or your child.</p>
+    </div>
+  </div>
 </div>
 <script src="/underscore/underscore-min.js"></script>
 <script>
