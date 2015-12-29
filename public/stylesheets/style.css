@@ -32,7 +32,14 @@ table.matchups td.table {
   text-align: center;
 }
 
-.monitored-id {
-    font-weight: bold;
-    color: green;
+li.monitored-id {
+  list-style: none;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+span.monitored-id {
+  font-weight: bold;
+  color: green;
+  cursor: default;
 }
