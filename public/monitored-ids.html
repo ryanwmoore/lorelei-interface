@@ -2,33 +2,32 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-          <strong>You are monitoring
-          <ng-pluralize count="ids.length"
-                        when="{'0': 'no IDs',
-                           'one': '{} ID',
-                         'other': '{} IDs'}">
-          </ng-pluralize>.</strong>
+          You are monitoring
+          <strong><ng-pluralize count="ids.length"
+              when="{'0': 'no IDs',
+                     'one': '{} ID',
+                     'other': '{} IDs'}"></ng-pluralize></strong>.
       </p>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-xs-6">
-      <li ng-repeat="id in ids" class="monitored-id">
-          <span ng-click="remove(id)" class="glyphicon glyphicon-remove"></span> <span class="monitored-id">{{id}}</span>
-      </li>
+    <div ng-repeat="id in ids" class="monitored-id col-xs-12 col-sm-6 col-md-4 col-lg-2">
+        <span ng-click="remove(id)" class="glyphicon glyphicon-remove" tooltip="Stop monitoring ID {{id}}"></span> <span class="monitored-id">{{id}}</span>
     </div>
   </div>
-
   <div class="row">
     <div class="col-xs-12">
       <form ng-submit="saveIds()">
-          <div ng-show="upToDate && ids.length > 0">In any tournament, the above IDs will be displayed prominently in your browser.</div>
+          <div ng-show="upToDate && ids.length > 0">
+            <p>
+              In any tournament, the above IDs will be displayed prominently in your browser. Click the "<span class="glyphicon glyphicon-remove"></span>" next to an ID to stop monitoring it.
+            </p>
+          </div>
           <div ng-hide="upToDate" class="bg-danger">Please wait for your changes to be saved...</div>
       </form>
   </div>
   </div>
-
   <div class="row">
     <form ng-submit="addId()" name="addIDForm" novalidate>
       <div class="col-md-12">
@@ -36,18 +35,20 @@
       </div>
       <div class="col-md-12">
         <input ng-hide="addIDForm.newID.$error.integer" class="btn btn-primary" type="submit" value="Monitor">
-        <span class="alert-danger" ng-show="addIDForm.newID.$error.integer">{{addIDForm.newID.$viewValue}}  is not a valid POP Player ID! POP Player IDs are numbers. For example: 729975</span>
+        <span class="bg-danger" ng-show="addIDForm.newID.$error.integer">{{addIDForm.newID.$viewValue}}  is not a valid POP Player ID! POP Player IDs are numbers. For example: 729975</span>
       </div>
     </form>
   </div>
-
-  <div class="row">
-    <div class="col-xs-4">
-      <input type="button" ng-show="ids.length > 0" class="btn btn-warning" ng-click="reset()" value="Remove Monitored IDs" />
+  <br />
+  <div class="row" ng-show="ids.length > 0">
+    <div class="col-xs-12">
+      <input type="button" class="btn btn-warning" ng-click="reset()" value="Remove Monitored IDs" />
     </div>
-
-    <div class="col-xs">
-      <p>Add/remove POP Player IDs that you are interested in. When viewing tournaments, the IDs will be highlighted. This feature is useful to quickly view the matches of yourself, a friend, or your child.</p>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <p>Add/remove POP Player IDs that you are interested in. When viewing tournaments, the IDs will be highlighted and displayed prominently.
+        This feature is useful to quickly view the your matches, those of a friend, or your child.</p>
     </div>
   </div>
 </div>

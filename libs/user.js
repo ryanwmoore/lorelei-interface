@@ -29,8 +29,8 @@ function getSessionIDs(req) {
 router.get('/', function (req, res) {
     debug("Letting player select their monitoried IDs...");
     res.render('monitored-ids', {
-        ids_set_url: ids_set_url
-    });    
+        ids_set_url: ids_set_url, title: "Monitor Player IDs in Tournament"
+    });
 });
 
 router.get('/ids', function (req, res) {
@@ -41,7 +41,7 @@ router.get('/ids', function (req, res) {
 router.post('/ids', function (req, res) {
     debug("Setting selected player IDs...");
     var ids = req.body.ids;
-    
+
     if (all_ids_are_valid(ids)) {
         debug("Will remember IDs: " + util.inspect(ids));
         saveIDsInSession(ids, req);

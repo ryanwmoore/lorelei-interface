@@ -32,14 +32,19 @@ table.matchups td.table {
   text-align: center;
 }
 
-li.monitored-id {
+div.monitored-id {
   list-style: none;
   font-size: 1.2em;
   cursor: pointer;
+  margin-bottom: 0.25em;
 }
 
 span.monitored-id {
   font-weight: bold;
   color: green;
   cursor: default;
+}
+
+form input {
+  margin-bottom: 0.25em;
 }
