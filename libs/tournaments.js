@@ -18,6 +18,12 @@ var router = express.Router();
 var tournaments_storage_directory = "tournament-storage";
 var tournaments_extension = ".tdf";
 
+function addManageLinkIfNecessary(tournament, extra_links) {
+  if (! tournament.passwordIsCorrect()) {
+    extra_links.push({url: "/tournaments/" + tournament.getId() + "/login", text: "manage"});
+  }
+}
+
 function getPasswordFor(req, tid) {
   if (req.session.logins && req.session.logins[tid]) {
     return req.session.logins[tid];
@@ -88,7 +94,11 @@ router.get('/:tid/login', function(req, res) {
   var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
   loader(tid, password, function(err, tournament) {
     if (err) { throw err; }
-    res.render('tournament-login', {tournament: tournament});
+
+    var extra_links = [];
+    addManageLinkIfNecessary(tournament, extra_links);
+
+    res.render('tournament-login', {tournament: tournament, extra_links: extra_links});
   });
 });
 
@@ -162,23 +172,27 @@ router.post('/:tid/upload', upload.single('round_data'), function(req, res) {
 router.get('/:tid/', function (req, res) {
     var tid = req.params.tid;
     var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
-    
+
     var loaderCallback = function (err, t) {
         if (err) { throw err; }
 
         var buildJsonRepresentationCallback = function (err, json) {
             if (err) { throw err; }
-            
+
+            var extra_links = [];
+            addManageLinkIfNecessary(t, extra_links);
+
             res.render('tournament-get', {
                 tournamentJsonString: util.inspect(json, { depth: null }),
                 tournamentJson: json,
                 tournament: t,
                 tournamentAsString: util.inspect(t),
+                extra_links: extra_links
             });
         }
         t.buildJsonRepresentation(buildJsonRepresentationCallback);
     }
-    
+
     loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);
 });
 
