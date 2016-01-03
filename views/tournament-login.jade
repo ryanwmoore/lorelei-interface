@@ -2,12 +2,13 @@ extends tournament
 
 block tournament_content
   h1 Login to #{tournament.getId()}
-  p By entering the tournament's password, you may manage the tournament (e.g., upload new rounds). Only tournament organizes need to know the tournament's password. Tournament participants only need to know their player ID and the tournament ID.
+  p You may manage the tournament (e.g., upload a new round's pairings) by entering the tournament's password. Only tournament organizers need to know the tournament's password.
 
   form(action="login", method="post", enctype="application/x-www-form-urlencoded")
-    label(for="tournament_password") Tournament Management Password
+    label(for="tournament_password") Management Password:
+    br
     if password_warning
-      p.warning #{password_warning}
+      p.bg-danger #{password_warning}
     input(type="password", name="tournament_password", id="tournament_password")
-
-    input(type='submit',name='submit',value='Submit')
+    br
+    input(type='submit',name='submit',value='Submit', class='btn btn-primary')

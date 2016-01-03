@@ -8,15 +8,17 @@ block tournament_content
       if message
         p.warning #{message}
 
-      label(for="round_data") Select the .tdf to upload
+      label(for="round_data") Select the .tdf to upload:
+      br
       input(type="file", name="round_data", id="round_data")
       br
 
-      label(for="set_to_new_round") Make this upload the current round
+      label(for="set_to_new_round") Make this upload the current round?
+      span 
       input(type="checkbox", name="set_to_new_round", id="set_to_new_round", checked="checked")
       br
 
-      input(type='submit',name='submit',value='Submit')
+      input(type='submit',name='submit',value='Upload', class='btn btn-primary')
   else
     p.warning You must be a
       a(href="/tournaments/#{tournament.getId()}/login") tournament manager
