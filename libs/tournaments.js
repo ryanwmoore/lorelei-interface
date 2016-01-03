@@ -18,6 +18,8 @@ var router = express.Router();
 var tournaments_storage_directory = "tournament-storage";
 var tournaments_extension = ".tdf";
 
+var title_for_new_tournament_page = "Start a New Tournament";
+
 function addManageLinkIfNecessary(tournament, extra_links) {
   if (! tournament.passwordIsCorrect()) {
     extra_links.push({url: "/tournaments/" + tournament.getId() + "/login", text: "manage"});
@@ -42,13 +44,13 @@ router.get('/', function(req, res) {
       return;
     }
     debug("Found: " + list_of_tournaments);
-    res.render('tournaments-get', { tournaments: list_of_tournaments });
+    res.render('tournaments-get', { tournaments: list_of_tournaments, title: "Active Tournament Listing" });
   }
   var loader = tournamentFileLoader.TournamentFileIteratoryFactory(tournaments_storage_directory, callback);
 });
 
 router.get('/new', function(req, res) {
-  res.render('tournaments-new', { form: { } });
+  res.render('tournaments-new', { form: { }, title: title_for_new_tournament_page });
 });
 
 router.post('/new', function(req, res) {
@@ -70,7 +72,8 @@ router.post('/new', function(req, res) {
                                     tournament_new_id: req.body.tournament_new_id,
                                     tournament_new_password: req.body.tournament_new_password,
                                     tournament_new_password_again: req.body.tournament_new_password_again
-                                }
+                                },
+                                title: title_for_new_tournament_page
     };
     debug(template_variables);
     res.render('tournaments-new',  template_variables);
@@ -87,6 +90,10 @@ router.post('/new', function(req, res) {
   }
 });
 
+function getLoginPageTitle(tid) {
+  return "Login to Manage " + tid;
+}
+
 router.get('/:tid/login', function(req, res) {
   var tid = req.params.tid;
   var password = getPasswordFor(req, tid);
@@ -98,7 +105,7 @@ router.get('/:tid/login', function(req, res) {
     var extra_links = [];
     addManageLinkIfNecessary(tournament, extra_links);
 
-    res.render('tournament-login', {tournament: tournament, extra_links: extra_links});
+    res.render('tournament-login', {tournament: tournament, extra_links: extra_links, title: getLoginPageTitle(tid)});
   });
 });
 
@@ -121,7 +128,7 @@ router.post('/:tid/login', function(req, res) {
     } else {
       var password_warning = "Incorrect password";
       debug("Login to " + tid + " failed");
-      res.render('tournament-login', {password_warning: password_warning, tournament: tournament});
+      res.render('tournament-login', {password_warning: password_warning, tournament: tournament, title: getLoginPageTitle(tid)});
     }
   });
 });
@@ -134,6 +141,9 @@ function getPasswordFor(req, tid) {
   return req.session.logins[tid];
 }
 
+function getTitleForUploadPage(tid) {
+  return "Upload a new round for " + tid;
+}
 
 router.get('/:tid/upload', function(req, res) {
   var tid = req.params.tid;
@@ -142,7 +152,7 @@ router.get('/:tid/upload', function(req, res) {
   var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
   loader(tid, password, function(err, tournament) {
     if (err) { throw err; }
-    res.render('tournament-upload', {tournament: tournament});
+    res.render('tournament-upload', {tournament: tournament, title: getTitleForUploadPage(tid)});
   });
 });
 
@@ -162,7 +172,7 @@ router.post('/:tid/upload', upload.single('round_data'), function(req, res) {
         tournament.save();
         res.redirect("/tournaments/#{tid}/");
       } else {
-        res.render('tournament-upload', {tournament: tournament, message: err.message});
+        res.render('tournament-upload', {tournament: tournament, message: err.message, title: getTitleForUploadPage(tid)});
       }
     }, setToNewRound);
 
@@ -187,6 +197,7 @@ router.get('/:tid/', function (req, res) {
                 tournamentJson: json,
                 tournament: t,
                 tournamentAsString: util.inspect(t),
+                title: tid,
                 extra_links: extra_links
             });
         }
