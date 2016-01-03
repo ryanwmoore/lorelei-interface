@@ -12,8 +12,8 @@ nav(class="navbar navbar-default" ng-controller="NavigationController" id="navig
     ul(class="nav navbar-nav")
       li #[a(href="/ids/") monitor player progress]
       li(role="separator",class="divider")
+      li #[a(href="/tournaments/") view tournament]
       li #[a(href="/tournaments/new") start tournament]
-      li #[a(href="/tournaments/") view tournaments]
       if extra_links
         for extra_link in extra_links
           li #[a(href="#{extra_link.url}") #{extra_link.text}]
