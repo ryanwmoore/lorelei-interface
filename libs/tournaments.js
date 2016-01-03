@@ -20,9 +20,11 @@ var tournaments_extension = ".tdf";
 
 var title_for_new_tournament_page = "Start a New Tournament";
 
-function addManageLinkIfNecessary(tournament, extra_links) {
+function addContextExtraLinks(tournament, extra_links) {
   if (! tournament.passwordIsCorrect()) {
     extra_links.push({url: "/tournaments/" + tournament.getId() + "/login", text: "manage"});
+  } else {
+    extra_links.push({url: "/tournaments/" + tournament.getId() + "/upload", text: "upload new round for " + tournament.getId()});
   }
 }
 
@@ -103,7 +105,7 @@ router.get('/:tid/login', function(req, res) {
     if (err) { throw err; }
 
     var extra_links = [];
-    addManageLinkIfNecessary(tournament, extra_links);
+    addContextExtraLinks(tournament, extra_links);
 
     res.render('tournament-login', {tournament: tournament, extra_links: extra_links, title: getLoginPageTitle(tid)});
   });
@@ -152,7 +154,11 @@ router.get('/:tid/upload', function(req, res) {
   var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
   loader(tid, password, function(err, tournament) {
     if (err) { throw err; }
-    res.render('tournament-upload', {tournament: tournament, title: getTitleForUploadPage(tid)});
+
+    var extra_links = [];
+    addContextExtraLinks(tournament, extra_links);
+
+    res.render('tournament-upload', {tournament: tournament, title: getTitleForUploadPage(tid), extra_links: extra_links});
   });
 });
 
@@ -172,6 +178,9 @@ router.post('/:tid/upload', upload.single('round_data'), function(req, res) {
         tournament.save();
         res.redirect("/tournaments/#{tid}/");
       } else {
+        var extra_links = [];
+        addContextExtraLinks(tournament, extra_links);
+
         res.render('tournament-upload', {tournament: tournament, message: err.message, title: getTitleForUploadPage(tid)});
       }
     }, setToNewRound);
@@ -190,7 +199,7 @@ router.get('/:tid/', function (req, res) {
             if (err) { throw err; }
 
             var extra_links = [];
-            addManageLinkIfNecessary(t, extra_links);
+            addContextExtraLinks(t, extra_links);
 
             res.render('tournament-get', {
                 tournamentJsonString: util.inspect(json, { depth: null }),
