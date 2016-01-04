@@ -16,13 +16,16 @@
             <tr><th>Table</th><th>Player</th><th>Player</th></tr>
             <tr ng-repeat="match in round.matches">
               <td>{{match.isBye ? "bye" : match.table}}</td>
-              <td colspan="{{match.isBye ? 2 : 1}}">
-                <span class="glyphicon {{(match.outcome == 1 || match.isBye ? ['glyphicon-thumbs-up', 'winner'] : ['glyphicon-thumbs-down', 'loser']).join(' ')}}"></span>
-                {{roster_by_id[match.players[0]].name}}
+              <td  ng-class="monitored_ids[match.players[0]] != undefined ? 'monitored-id-instance' : ''" colspan="{{match.isBye ? 2 : 1}}">
+                <span ng-if="match.isBye">{{roster_by_id[match.players[0]].name}}</span>
+                <span ng-if="! match.isBye">
+                  <span class="glyphicon {{(match.outcome == 1 ? ['glyphicon-thumbs-up', 'winner'] : ['glyphicon-thumbs-down', 'loser']).join(' ')}}"></span>
+                  <span   title="{{match.players[0]}}">{{roster_by_id[match.players[0]].name}}</span>
+                </span>
               </td>
-              <td ng-hide="match.isBye">
+              <td ng-class="monitored_ids[match.players[1]] != undefined ? 'monitored-id-instance' : ''" ng-hide="match.isBye">
                 <span class="glyphicon {{(match.outcome == 1 ? ['winner', 'glyphicon-thumbs-down', 'loser'] : ['glyphicon-thumbs-up', 'winner']).join(' ')}}"></span>
-                {{roster_by_id[match.players[1]].name}}
+                <span title="{{match.players[1]}}">{{roster_by_id[match.players[1]].name}}</span>
               </td>
             </tr>
           </table>
@@ -57,7 +60,6 @@
         $scope.json = response.data;
         $scope.updated = new Date();
         $scope.roster_by_id = _.object(_.map($scope.json.information.roster, function(info) { return [info.id, info] }));
-        console.log($scope.roster_by_id);
 
         //Reverse/mutate here, instead of in the ng-repeat in order to avoid errors about "10 $digest() iterations reached"
         var rounds = $scope.json.information.rounds;
@@ -68,7 +70,7 @@
     });
 
     $http.get(ids_url).then(function successCallback(response) {
-        $scope.monitored_ids = response.data;
+        $scope.monitored_ids = _.object(_.map(response.data, function(id) { return [id, id]}));
     }, function errorCallback(response) {
         //TODO?
     });

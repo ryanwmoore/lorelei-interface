@@ -11,6 +11,15 @@ table.matchups .loser {
   color: #880000;
 }
 
+table.matchups .monitored-id-instance .winner {
+  color: #00ff00;
+}
+
+table.matchups .monitored-id-instance .loser {
+  color: #ff0000;
+}
+
+
 div.monitored-id {
   list-style: none;
   font-size: 1.2em;
@@ -26,4 +35,10 @@ span.monitored-id {
 
 form input {
   margin-bottom: 0.25em;
+}
+
+.monitored-id-instance {
+  font-weight: bolder;
+  color: white;
+  background-color: black;
 }
