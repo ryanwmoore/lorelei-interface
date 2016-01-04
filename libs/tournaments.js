@@ -202,6 +202,7 @@ router.get('/:tid/', function (req, res) {
             addContextExtraLinks(t, extra_links);
 
             res.render('tournament-get', {
+                ids_get_url: '/tournaments/' + tid + '/information',
                 tournamentJsonString: util.inspect(json, { depth: null }),
                 tournamentJson: json,
                 tournament: t,

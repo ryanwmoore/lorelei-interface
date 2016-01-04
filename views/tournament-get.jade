@@ -16,4 +16,5 @@ block tournament_content
     p The tournament information was last updated #[span.fromNowDate #{tournamentJson.modified}] (#[span.localDate #{tournamentJson.modified}]).
   script var tid = "#{tid}";
   script var tournament_json_url = "/tournaments/" + "#{tid}" + "/information";
+  script var ids_url = "#{ids_get_url}";
   include ../public/tournament-get.html
