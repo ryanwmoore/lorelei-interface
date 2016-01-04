@@ -3,16 +3,12 @@ span.versus::after {
   color: #aaa;
 }
 
-table.matchups td, table.matchups th {
-  border: 1px solid gray;
+table.matchups .winner {
+  color: #008800;
 }
 
-table.matchups tr.bye {
-  text-align: center;
-}
-
-table.matchups td.table {
-  text-align: center;
+table.matchups .loser {
+  color: #880000;
 }
 
 div.monitored-id {

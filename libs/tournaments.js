@@ -206,6 +206,7 @@ router.get('/:tid/', function (req, res) {
                 tournamentJson: json,
                 tournament: t,
                 tournamentAsString: util.inspect(t),
+                tid: tid,
                 title: tid,
                 extra_links: extra_links
             });

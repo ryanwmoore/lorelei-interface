@@ -7,13 +7,13 @@ block tournament_content
     h1 #{tournament.data.id}
 
   if tournament.passwordIsCorrect()
-    p You are a manager of this tournament. You may upload new rounds, change the tournament title, and change the look+feel of the tournament's page.
+    p.text-info You are a manager of this tournament. You may upload new rounds, change the tournament title, and change the look+feel of the tournament's page.
     ul
       li
         a(href="/tournaments/#{tournament.getId()}/upload") Upload a new round
   if tournamentJson.modified
-    h2 Round information
     h3 Last Update
     p The tournament information was last updated #[span.fromNowDate #{tournamentJson.modified}] (#[span.localDate #{tournamentJson.modified}]).
-  code= tournamentJsonString
-  code= tournamentAsString
+  script var tid = "#{tid}";
+  script var tournament_json_url = "/tournaments/" + "#{tid}" + "/information";
+  include ../public/tournament-get.html

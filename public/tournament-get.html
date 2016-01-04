@@ -1,0 +1,67 @@
+﻿<div id="monitoredTournamentRoot" ng-controller="MonitoredTournamentController">
+  <div class="row">
+    <div class="col-md-12">
+      <p ng-show="json == null">Please wait for the latest tournament information to load.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Matchups</h2>
+    </div>
+    <div class="col-xs-12">
+      <div ng-repeat="round in json.information.rounds">
+        <h3>Round {{round.number}}</h3>
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered table-hover matchups">
+            <tr><th>Table</th><th>Player</th><th>Player</th></tr>
+            <tr ng-repeat="match in round.matches">
+              <td>{{match.isBye ? "bye" : match.table}}</td>
+              <td colspan="{{match.isBye ? 2 : 1}}">
+                <span class="glyphicon {{(match.outcome == 1 || match.isBye ? ['glyphicon-thumbs-up', 'winner'] : ['glyphicon-thumbs-down', 'loser']).join(' ')}}"></span>
+                {{match.players[0]}}
+              </td>
+              <td ng-hide="match.isBye">
+                <span class="glyphicon {{(match.outcome == 1 ? ['winner', 'glyphicon-thumbs-down', 'loser'] : ['glyphicon-thumbs-up', 'winner']).join(' ')}}"></span>
+                {{match.players[1]}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-hide="json == null">
+    <div class="col-xs-12">
+      <h2>Roster<span class="glyphicon glyphicon-user"></span></h2>
+      <ol>
+        <li ng-repeat="player in json.information.roster" class="col-xs-12 col-sm-12 col-md-8 col-lg-4">
+            <span class="roster-player">{{player.name}} <span class="text-muted">({{player.id}})</span></span>
+        </li>
+      </ol>
+    </div>
+  </div>
+  <div class="row"><code>{{json}}</code></div>
+</div>
+
+<script src="/underscore/underscore-min.js"></script>
+<script>
+  var monitoredTournamentApp = angular.module('MonitoredTournamentApp', ['ui.bootstrap']);
+
+  monitoredTournamentApp.controller('MonitoredTournamentController', ['$scope', '$http', function ($scope, $http) {
+    $scope.json = null;
+    $scope.updated = null;
+
+    $http.get(tournament_json_url).then(function successCallback(response) {
+        $scope.json = response.data;
+        $scope.updated = new Date();
+
+        //Reverse/mutate here, instead of in the ng-repeat in order to avoid errors about "10 $digest() iterations reached"
+        var rounds = $scope.json.information.rounds;
+        rounds.reverse();
+
+    }, function errorCallback(response) {
+        //TODO?
+    });
+  }]);
+  angular.bootstrap($("#monitoredTournamentRoot"), ['MonitoredTournamentApp']);
+</script>
