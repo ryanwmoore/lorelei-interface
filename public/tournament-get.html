@@ -16,12 +16,16 @@
             <tr><th>Table</th><th>Player</th><th>Player</th></tr>
             <tr ng-repeat="match in round.matches">
               <td>{{match.isBye ? "bye" : match.table}}</td>
-              <td  ng-class="monitored_ids[match.players[0]] != undefined ? 'monitored-id-instance' : ''" colspan="{{match.isBye ? 2 : 1}}">
-                <span ng-if="match.isBye">{{roster_by_id[match.players[0]].name}}</span>
-                <span ng-if="! match.isBye">
-                  <span class="glyphicon {{(match.outcome == 1 ? ['glyphicon-thumbs-up', 'winner'] : ['glyphicon-thumbs-down', 'loser']).join(' ')}}"></span>
-                  <span   title="{{match.players[0]}}">{{roster_by_id[match.players[0]].name}}</span>
+              <td ng-class="monitored_ids[match.players[0]] != undefined ? 'monitored-id-instance' : ''" colspan="{{match.isBye ? 2 : 1}}">
+
+                <span ng-switch on="match">
+                  <span ng-switch-when="match.isBye">{{roster_by_id[match.players[0]].name}}</span>
+                  <span ng-switch-default>
+                    <span class="glyphicon {{(match.outcome == 1 ? ['glyphicon-thumbs-up', 'winner'] : ['glyphicon-thumbs-down', 'loser']).join(' ')}}"></span>
+                    <span title="{{match.players[0]}}">{{roster_by_id[match.players[0]].name}}</span>
+                  </span>
                 </span>
+
               </td>
               <td ng-class="monitored_ids[match.players[1]] != undefined ? 'monitored-id-instance' : ''" ng-hide="match.isBye">
                 <span class="glyphicon {{(match.outcome == 1 ? ['winner', 'glyphicon-thumbs-down', 'loser'] : ['glyphicon-thumbs-up', 'winner']).join(' ')}}"></span>
@@ -62,8 +66,7 @@
         $scope.roster_by_id = _.object(_.map($scope.json.information.roster, function(info) { return [info.id, info] }));
 
         //Reverse/mutate here, instead of in the ng-repeat in order to avoid errors about "10 $digest() iterations reached"
-        var rounds = $scope.json.information.rounds;
-        rounds.reverse();
+        $scope.json.information.rounds.reverse();
 
     }, function errorCallback(response) {
         //TODO?
