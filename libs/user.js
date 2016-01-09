@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 var valid_player_id_regexp = /^[0-9]+$/;
 
-var ids_set_url = "ids";
+var ids_set_url = "/ids/ids";
 
 function all_ids_are_valid(ids) {
     return ids != null && ids != undefined && _.every(ids, function (item) { return String(item).match(valid_player_id_regexp) != null; });
