@@ -66,7 +66,7 @@
 
 <script src="/underscore/underscore-min.js"></script>
 <script>
-  var monitoredTournamentApp = angular.module('MonitoredTournamentApp', ['ui.bootstrap']);
+  var monitoredTournamentApp = angular.module('MonitoredTournamentApp', ['ngAnimate', 'ui.bootstrap']);
 
   monitoredTournamentApp.controller('MonitoredTournamentController', ['$scope', '$http', function ($scope, $http) {
     $scope.json = null;

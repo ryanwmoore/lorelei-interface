@@ -52,7 +52,7 @@
 </div>
 <script src="/underscore/underscore-min.js"></script>
 <script>
-  var monitoredIDsApp = angular.module('MonitoredIDsApp', ['ui.bootstrap']);
+  var monitoredIDsApp = angular.module('MonitoredIDsApp', ['ngAnimate', 'ui.bootstrap']);
 
   var INTEGER_REGEXP = /^\-?\d+$/;
   monitoredIDsApp.directive('integer', function() {

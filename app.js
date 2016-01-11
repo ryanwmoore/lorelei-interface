@@ -19,6 +19,7 @@ var app = express();
 app.use('/angular', express.static('./node_modules/angular/'));
 app.use('/underscore', express.static('./node_modules/underscore/'));
 app.use('/angular-ui-bootstrap', express.static('./node_modules/angular-ui-bootstrap/'));
+app.use('/angular-animate', express.static('./node_modules/angular-animate/'));
 
 app.use(compression())
 app.use(morgan('combined'))
