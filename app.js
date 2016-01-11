@@ -24,6 +24,8 @@ app.use(compression())
 app.use(morgan('combined'))
 
 app.use(session({
+    maxAge: 60000 * 60 * 24 * 365, //1 year (60,000 ms )
+    rolling: true,
     store: new FileStore(),
     secret: 'cubchoo whatcha gonna do? evolve? lol',
     resave: false,
