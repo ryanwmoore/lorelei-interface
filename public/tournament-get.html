@@ -10,13 +10,11 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12">
-      <div class="col-xs-12 col-sm-6">
-        <p><a href="/ids">Monitored IDs</a> look <span class="monitored-id-instance">like this</span>.</p>
-      </div>
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-        <span class="btn btn-primary" ng-click="showAllRounds = !showAllRounds">{{ showAllRounds ? "Hide" : "Show"}} Non-Current Rounds</span>
-      </div>
+    <div class="col-xs-12 col-sm-6">
+      <p><a href="/ids">Monitored IDs</a> look <span class="monitored-id-instance">like this</span>.</p>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+      <a class="btn btn-primary" ng-click="showAllRounds = !showAllRounds">{{ showAllRounds ? "Hide" : "Show"}} Non-Current Rounds</a>
     </div>
   </div>
 
@@ -51,21 +49,19 @@
 
   <div class="row" ng-hide="json == null">
     <div class="col-xs-12">
-      <span class="btn btn-primary" ng-click="showAllRounds = !showAllRounds">{{ showAllRounds ? "Hide" : "Show"}} Non-Current Rounds</span>
+      <a class="btn btn-primary" ng-click="showAllRounds = !showAllRounds">{{ showAllRounds ? "Hide" : "Show"}} Non-Current Rounds</a>
     </div>
   </div>
 
   <div class="row" ng-hide="json == null">
     <div class="col-xs-12">
       <h2>Roster<span class="glyphicon glyphicon-user"></span></h2>
-      <ol>
-        <li ng-repeat="player in json.information.roster" class="col-xs-12 col-sm-12 col-md-8 col-lg-4">
-            <span class="roster-player">{{player.name}} <span class="text-muted">({{player.id}})</span></span>
-        </li>
-      </ol>
+    </div>
+    <div ng-repeat="player in json.information.roster" class="col-xs-12 col-md-8 col-lg-4">
+      <span class="roster-player">{{player.name}} <span class="text-muted">({{player.id}})</span></span>
     </div>
   </div>
-  <div class="row"><code>{{json}}</code></div>
+  <div class="row"><div class="col-xs-12"><code>{{json}}</code></div></div>
 </div>
 
 <script src="/underscore/underscore-min.js"></script>
