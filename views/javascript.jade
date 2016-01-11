@@ -51,8 +51,10 @@ script(type='text/javascript').
   }
 
   function addActiveClassToNavigationElements() {
+    var classToAdd = 'active'
     var path = window.location.pathname;
-    $('nav li a[href="'+path+'"]').parents('li').addClass('active');
+    $('div.sidebar-offcanvas a.list-group-item[href="'+path+'"]').addClass(classToAdd);
+    $('nav li a[href="'+path+'"]').parents('li').addClass(classToAdd);
   }
 
   $( document ).ready( function() {
