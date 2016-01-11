@@ -29,15 +29,13 @@
   </div>
   </div>
   <div class="row">
-    <form ng-submit="addId()" name="addIDForm" novalidate>
-      <div class="col-md-12">
-        <input name="newID" type="text" size="15" placeholder="Enter ID" value="" ng-model="newID" integer>
-      </div>
-      <div class="col-md-12">
-        <input ng-hide="addIDForm.newID.$error.integer" class="btn btn-primary" type="submit" value="Monitor">
-        <span class="bg-danger" ng-show="addIDForm.newID.$error.integer">{{addIDForm.newID.$viewValue}}  is not a valid POP Player ID! POP Player IDs are numbers. For example: 729975</span>
-      </div>
-    </form>
+    <div class="col-xs-12">
+      <form ng-submit="addId()" name="addIDForm" novalidate>
+          <input name="newID" type="text" size="15" placeholder="Enter ID" value="" ng-model="newID" integer>
+          <input ng-hide="addIDForm.newID.$error.integer" class="btn btn-primary" type="submit" value="Monitor">
+          <span class="bg-danger" ng-show="addIDForm.newID.$error.integer">{{addIDForm.newID.$viewValue}}  is not a valid POP Player ID! POP Player IDs are numbers. For example: 729975</span>
+      </form>
+    </div>
   </div>
   <br />
   <div class="row" ng-show="ids.length > 0">
