@@ -20,7 +20,11 @@ var tournaments_extension = ".tdf";
 
 var title_for_new_tournament_page = "Start a New Tournament";
 
+var fullscreenExtension = "fullscreen";
+
 function addContextExtraLinks(tournament, extra_links) {
+  extra_links.push({url: "/tournaments/" + tournament.getId() + '/' + fullscreenExtension, text: "display fullscreen"});
+
   if (! tournament.passwordIsCorrect()) {
     extra_links.push({url: "/tournaments/" + tournament.getId() + "/login", text: "manage"});
   } else {
@@ -188,34 +192,38 @@ router.post('/:tid/upload', upload.single('round_data'), function(req, res) {
   });
 });
 
+function genericStadiumPage(req, res, destination, main_div_class) {
+  var tid = req.params.tid;
+  var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+
+  if (main_div_class === undefined) {
+    main_div_class = '';
+  }
+
+  var loaderCallback = function (err, t) {
+      if (err) { throw err; }
+
+        var extra_links = [];
+        addContextExtraLinks(t, extra_links);
+
+        res.render(destination, {
+            ids_get_url: '/ids/ids',
+            tournament: t,
+            tid: tid,
+            title: tid,
+            extra_links: extra_links,
+            main_div_class: main_div_class
+        });
+  };
+  loader(tid, getPasswordFor(req, tid), loaderCallback);
+}
+
 router.get('/:tid/', function (req, res) {
-    var tid = req.params.tid;
-    var loader = tournamentFileLoader.TournamentFileLoaderFactory(tournaments_storage_directory);
+  genericStadiumPage(req, res, 'tournament-get');
+});
 
-    var loaderCallback = function (err, t) {
-        if (err) { throw err; }
-
-        var buildJsonRepresentationCallback = function (err, json) {
-            if (err) { throw err; }
-
-            var extra_links = [];
-            addContextExtraLinks(t, extra_links);
-
-            res.render('tournament-get', {
-                ids_get_url: '/ids/ids',
-                tournamentJsonString: util.inspect(json, { depth: null }),
-                tournamentJson: json,
-                tournament: t,
-                tournamentAsString: util.inspect(t),
-                tid: tid,
-                title: tid,
-                extra_links: extra_links
-            });
-        }
-        t.buildJsonRepresentation(buildJsonRepresentationCallback);
-    }
-
-    loader(req.params.tid, getPasswordFor(req, tid), loaderCallback);
+router.get('/:tid/' + fullscreenExtension, function(req, res) {
+  genericStadiumPage(req, res, 'tournament-fullscreen', 'fullscreen');
 });
 
 router.get('/:tid/information', function (req, res) {

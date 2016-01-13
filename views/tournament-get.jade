@@ -1,17 +1,9 @@
 extends tournament
 
 block tournament_content
-  if tournament.data.title
-    h1 #{tournament.data.title}
-  else
-    h1 #{tournament.data.id}
-
   if tournament.passwordIsCorrect()
     p.text-info You are a manager of this tournament. You may upload new rounds, change the tournament title, and change the look+feel of the tournament's page.
-  if tournamentJson.modified
-    h3 Last Update
-    p The tournament information was last updated #[span.fromNowDate #{tournamentJson.modified}] (#[span.localDate #{tournamentJson.modified}]).
   script var tid = "#{tid}";
   script var tournament_json_url = "/tournaments/" + "#{tid}" + "/information";
   script var ids_url = "#{ids_get_url}";
-  include ../public/tournament-get.html
+  include tournament-get.html

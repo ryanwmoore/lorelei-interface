@@ -3,6 +3,9 @@ span.versus::after {
   color: #aaa;
 }
 
+span.table-or-bye {
+}
+
 table.matchups .winner {
   color: #008800;
 }
@@ -41,4 +44,19 @@ form input {
   font-weight: bolder;
   color: white;
   background-color: black;
+}
+
+.container.fullscreen {
+  margin-right: 0;
+  margin-left: 0;
+  max-width: initial;
+  width: initial;
+}
+
+.fullscreen-entry:nth-child(6n+1) {
+  clear: left;
+}
+
+span.fullscreen-player {
+  font-weight: bold;
 }

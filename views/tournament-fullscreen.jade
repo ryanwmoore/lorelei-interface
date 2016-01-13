@@ -1,0 +1,7 @@
+extends tournament
+
+block tournament_content
+  script var tid = "#{tid}";
+  script var tournament_json_url = "/tournaments/" + "#{tid}" + "/information";
+  script var ids_url = "#{ids_get_url}";
+  include tournament-fullscreen.html

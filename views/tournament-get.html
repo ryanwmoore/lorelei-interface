@@ -6,6 +6,12 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
+      <h2>Last Updated</h2>
+      <p>The tournament information was last updated {{json.information.modifiedFromNow}} ({{json.information.modifiedFormatted}}).</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
       <h2>Matchups</h2>
     </div>
   </div>
@@ -82,6 +88,8 @@
 
         //Reverse/mutate here, instead of in the ng-repeat in order to avoid errors about "10 $digest() iterations reached"
         $scope.json.information.rounds.reverse();
+        $scope.json.information.modifiedFromNow = asMoment($scope.json.information.modified).fromNow();
+        $scope.json.information.modifiedFormatted = asMoment($scope.json.information.modified).format("llll");
 
     }, function errorCallback(response) {
         //TODO?

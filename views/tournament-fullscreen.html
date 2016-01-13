@@ -1,0 +1,97 @@
+﻿<div id="monitoredTournamentFullscreenRoot" ng-controller="MonitoredTournamentFullscreenController">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>About the Fullscreen Page</h2>
+      <p>This page is intended to be displayed on a large screen (e.g., using a projector). It does its best to cram all matchups onto a single screen, so that all players can find their pairings.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p ng-show="json == null">Please wait for the latest tournament information to load.</p>
+      <p ng-show="current_round == null">No round data exists.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Last Updated</h2>
+      <p>Round information was last updated {{json.information.modifiedFromNow}} ({{json.information.modifiedFormatted}}).</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Round {{current_round.number}} Pairings</h2>
+    </div>
+  </div>
+  <div class="row" ng-show="current_round != null">
+    <div class="col-xs-2 fullscreen-entry" ng-repeat="match in current_round.matches track by $index">
+      <span class="table-or-bye">{{match.isBye ? "(bye)" : match.table}}</span>
+      <span class="fullscreen-player fullscreen-player1">{{roster_by_id[match.players[0]].name}}</span><br />
+      <span class="versus" ng-hide="match.isBye"></span>
+      <span class="fullscreen-player fullscreen-player2" ng-hide="match.isBye">{{roster_by_id[match.players[1]].name}}</span>
+    </div>
+  </div>
+  <div class="row"><div class="col-xs-12"><code>{{json}}</code></div></div>
+</div>
+
+<script src="/underscore/underscore-min.js"></script>
+<script>
+  var monitoredTournamentApp = angular.module('MonitoredTournamentFullscreenApp', ['ngAnimate', 'ui.bootstrap']);
+
+  monitoredTournamentApp.controller('MonitoredTournamentFullscreenController', ['$scope', '$http', function ($scope, $http) {
+    $scope.json = null;
+    $scope.updated = null;
+    $scope.roster_by_id = null;
+    $scope.showAllRounds = false;
+    $scope.current_round = null;
+
+    function getJson() {
+      $http.get(tournament_json_url).then(function successCallback(response) {
+          $scope.json = response.data;
+          $scope.updated = new Date();
+          $scope.roster_by_id = _.object(_.map($scope.json.information.roster, function(info) { return [info.id, info] }));
+
+          //Reverse/mutate here, instead of in the ng-repeat in order to avoid errors about "10 $digest() iterations reached"
+          $scope.json.information.rounds.reverse();
+          $scope.json.information.modifiedFromNow = asMoment($scope.json.information.modified).fromNow();
+          $scope.json.information.modifiedFormatted = asMoment($scope.json.information.modified).format("llll");
+          $scope.updatedFromNow = asMoment($scope.updated).fromNow();
+          $scope.updatedFormatted = asMoment($scope.updated).format("llll");
+
+          if ($scope.json.information.rounds.length > 0) {
+            var current_round = $scope.json.information.rounds[0];
+            var current_round_with_players_reversed = _.map(current_round.matches,
+              function(entry) {
+                if (entry.isBye) {
+                  return null;
+                }
+                var clone = JSON.parse(JSON.stringify(entry));
+
+                var originalPlayer0 = clone.players[0];
+                clone.players[0] = clone.players[1];
+                clone.players[1] = originalPlayer0;
+                return clone;
+              }
+            );
+
+            current_round.matches = current_round.matches.concat(current_round_with_players_reversed);
+            current_round.matches = _.filter(current_round.matches, function(entry) { return entry != null;});
+            current_round.matches = _.sortBy(current_round.matches, function(entry) {
+              console.log(entry.players[0] + " maps to " + $scope.roster_by_id[entry.players[0]].name);
+              return $scope.roster_by_id[entry.players[0]].name.toLowerCase()
+            });
+            $scope.current_round = current_round;
+          } else {
+            $scope.current_round = null;
+          }
+
+      }, function errorCallback(response) {
+          //TODO?
+      });
+    }
+
+    getJson();
+
+    //TODO: Refresh automatically.
+  }]);
+  angular.bootstrap($("#monitoredTournamentFullscreenRoot"), ['MonitoredTournamentFullscreenApp']);
+</script>

@@ -29,7 +29,8 @@ function getSessionIDs(req) {
 router.get('/', function (req, res) {
     debug("Letting player select their monitoried IDs...");
     res.render('monitored-ids', {
-        ids_set_url: ids_set_url, title: "Monitor Player IDs in Tournament"
+        ids_set_url: ids_set_url, title: "Monitor Player IDs in Tournament",
+        extra_links: [{url: "url", text:"text"}, {url: "url", text:"text"}, {url: "url", text:"text"}]
     });
 });
 
