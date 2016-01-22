@@ -24,10 +24,11 @@
   </div>
   <div class="row" ng-show="current_round != null">
     <div class="col-xs-2 fullscreen-entry" ng-repeat="match in current_round.matches track by $index">
-      <span class="table-or-bye">{{match.isBye ? "(bye)" : match.table}}</span>
+      <span class="table-or-bye" ng-show="! match.isBye">{{match.table}}</span>
       <span class="fullscreen-player fullscreen-player1">{{roster_by_id[match.players[0]].name}}</span><br />
       <span class="versus" ng-hide="match.isBye"></span>
       <span class="fullscreen-player fullscreen-player2" ng-hide="match.isBye">{{roster_by_id[match.players[1]].name}}</span>
+      <span class="table-or-bye bye" ng-show="match.isBye">(bye)</span>
     </div>
   </div>
   <div class="row"><div class="col-xs-12"><code>{{json}}</code></div></div>
