@@ -53,10 +53,6 @@ form input {
   width: initial;
 }
 
-.fullscreen-entry:nth-child(6n+1) {
-  clear: left;
-}
-
 span.fullscreen-player1 {
   font-weight: 800;
 }
@@ -71,4 +67,8 @@ span.bye {
 
 div.fullscreen-entry {
   padding-bottom: 1em;
+}
+
+.fullscreen-entry {
+  padding-right: 2em;
 }

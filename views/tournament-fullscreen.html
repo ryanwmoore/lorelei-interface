@@ -1,14 +1,24 @@
 ﻿<div id="monitoredTournamentFullscreenRoot" ng-controller="MonitoredTournamentFullscreenController">
   <div class="row">
-    <div class="col-xs-12">
-      <h2>About the Fullscreen Page</h2>
-      <p>This page is intended to be displayed on a large screen (e.g., using a projector). It does its best to cram all matchups onto a single screen, so that all players can find their pairings.</p>
-    </div>
-  </div>
-  <div class="row">
     <div class="col-md-12">
       <p ng-show="json == null">Please wait for the latest tournament information to load.</p>
       <p ng-show="current_round == null">No round data exists.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Current Pairings (Round {{current_round.number}})</h2>
+    </div>
+  </div>
+  <div ng-show="current_round != null">
+    <span class="fullscreen-entry" style="font-size: 1.0em" ng-repeat="match in current_round.matches track by $index">
+      <span class="table-or-bye" ng-show="! match.isBye">{{match.table}}</span>&nbsp;<span class="fullscreen-player fullscreen-player1">{{roster_by_id[match.players[0]].name.replace(" ", "&nbsp;")}}</span>&nbsp;<span class="versus" ng-hide="match.isBye"></span>
+      <span class="fullscreen-player fullscreen-player2" ng-hide="match.isBye">{{roster_by_id[match.players[1]].name.replace(" ", "&nbsp;")}}</span>
+      <span class="table-or-bye bye" ng-show="match.isBye">(bye)</span>
+    </span>
+    <div>
+      <button id="increase-font" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Increase Font Size</button>
+      <button id="decrease-font" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span> Decrease Font Size</button>
     </div>
   </div>
   <div class="row">
@@ -19,19 +29,10 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <h2>Round {{current_round.number}} Pairings</h2>
+      <h2>About the Fullscreen Page</h2>
+      <p>This page is intended to be displayed on a large screen (e.g., a projector). It does its best to cram all matchups onto a single screen, so that all players can find their pairings.</p>
     </div>
   </div>
-  <div class="row" ng-show="current_round != null">
-    <div class="col-xs-2 fullscreen-entry" ng-repeat="match in current_round.matches track by $index">
-      <span class="table-or-bye" ng-show="! match.isBye">{{match.table}}</span>
-      <span class="fullscreen-player fullscreen-player1">{{roster_by_id[match.players[0]].name}}</span><br />
-      <span class="versus" ng-hide="match.isBye"></span>
-      <span class="fullscreen-player fullscreen-player2" ng-hide="match.isBye">{{roster_by_id[match.players[1]].name}}</span>
-      <span class="table-or-bye bye" ng-show="match.isBye">(bye)</span>
-    </div>
-  </div>
-  <div class="row"><div class="col-xs-12"><code>{{json}}</code></div></div>
 </div>
 
 <script src="/underscore/underscore-min.js"></script>
@@ -94,4 +95,23 @@
     //TODO: Refresh automatically.
   }]);
   angular.bootstrap($("#monitoredTournamentFullscreenRoot"), ['MonitoredTournamentFullscreenApp']);
+
+  var baseSize = 100;
+  var baseSizeIncrement = 10;
+
+  function resizeFullscreenEntries() {
+    jQuery(".fullscreen-entry").each(function() {
+      jQuery(this).css('font-size', baseSize + "%");
+    });
+  }
+
+  jQuery("#decrease-font").click(function() {
+      baseSize = baseSize - baseSizeIncrement;
+      resizeFullscreenEntries();
+  });
+
+  jQuery("#increase-font").click(function() {
+      baseSize = baseSize + baseSizeIncrement;
+      resizeFullscreenEntries();
+  });
 </script>
