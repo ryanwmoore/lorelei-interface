@@ -77,7 +77,6 @@
             current_round.matches = current_round.matches.concat(current_round_with_players_reversed);
             current_round.matches = _.filter(current_round.matches, function(entry) { return entry != null;});
             current_round.matches = _.sortBy(current_round.matches, function(entry) {
-              console.log(entry.players[0] + " maps to " + $scope.roster_by_id[entry.players[0]].name);
               return $scope.roster_by_id[entry.players[0]].name.toLowerCase()
             });
             $scope.current_round = current_round;
@@ -86,7 +85,7 @@
           }
 
       }, function errorCallback(response) {
-          //TODO?
+          console.log("An error occurred: " + response);
       });
     }
 

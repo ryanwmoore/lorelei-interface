@@ -23,7 +23,7 @@ var title_for_new_tournament_page = "Start a New Tournament";
 var fullscreenExtension = "fullscreen";
 
 function addContextExtraLinks(tournament, extra_links) {
-  extra_links.push({url: "/tournaments/" + tournament.getId() + '/' + fullscreenExtension, text: "display fullscreen"});
+  extra_links.push({url: "/tournaments/" + tournament.getId() + '/' + fullscreenExtension, text: "view fullscreen"});
 
   if (! tournament.passwordIsCorrect()) {
     extra_links.push({url: "/tournaments/" + tournament.getId() + "/login", text: "manage"});
