@@ -12,7 +12,7 @@
   </div>
   <div ng-show="current_round != null">
     <span class="fullscreen-entry" style="font-size: 1.0em" ng-repeat="match in current_round.matches track by $index">
-      <span class="table-or-bye" ng-show="! match.isBye">{{match.table}}</span>&nbsp;<span class="fullscreen-player fullscreen-player1">{{roster_by_id[match.players[0]].name.replace(" ", "&nbsp;")}}</span>&nbsp;<span class="versus" ng-hide="match.isBye"></span>
+      <span class="table-or-bye" ng-show="! match.isBye">{{match.table}}</span>&nbsp;<span class="fullscreen-player fullscreen-player1"><span class="first-letter" ng-class="roster_by_id[match.players[0]].name_first_letter_class">{{roster_by_id[match.players[0]].name_first_letter}}</span>{{roster_by_id[match.players[0]].name_remaining.replace(" ", "&nbsp;")}}</span>&nbsp;<span class="versus" ng-hide="match.isBye"></span>
       <span class="fullscreen-player fullscreen-player2" ng-hide="match.isBye">{{roster_by_id[match.players[1]].name.replace(" ", "&nbsp;")}}</span>
       <span class="table-or-bye bye" ng-show="match.isBye">(bye)</span>
     </span>
@@ -51,6 +51,20 @@
           $scope.json = response.data;
           $scope.updated = new Date();
           $scope.roster_by_id = _.object(_.map($scope.json.information.roster, function(info) { return [info.id, info] }));
+
+          seenLetters = [];
+
+          _.each($scope.roster_by_id, function(information, id) {
+            information.name_first_letter = information.name[0];
+            information.name_remaining = information.name.substring(1);
+
+            if (seenLetters[information.name_first_letter] === undefined) {
+              information.name_first_letter_class = "first-letter-occurance";
+            } else {
+              information.name_first_letter_class = "first-letter-repeat";
+            }
+            seenLetters[information.name_first_letter] = true;
+          });
 
           //Reverse/mutate here, instead of in the ng-repeat in order to avoid errors about "10 $digest() iterations reached"
           $scope.json.information.rounds.reverse();

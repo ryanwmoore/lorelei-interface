@@ -53,11 +53,7 @@ form input {
   width: initial;
 }
 
-span.fullscreen-player1 {
-  font-weight: 800;
-}
-
-span.fullscreen-player2 {
+span.fullscreen-player1, span.fullscreen-player2 {
   font-weight: bold;
 }
 
@@ -71,4 +67,9 @@ div.fullscreen-entry {
 
 .fullscreen-entry {
   padding-right: 2em;
+}
+
+.first-letter-occurance {
+  font-weight: 800;
+  font-size: 1.25em;
 }
