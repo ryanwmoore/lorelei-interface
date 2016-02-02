@@ -73,3 +73,7 @@ div.fullscreen-entry {
   font-weight: 800;
   font-size: 1.25em;
 }
+
+.fullscreen h2 {
+  margin-top: 0;
+}

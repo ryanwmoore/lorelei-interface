@@ -14,6 +14,11 @@ nav(class="navbar navbar-default navbar-static-top" ng-controller="NavigationCon
         li(role="separator",class="divider")
         li #[a(href="/tournaments/") view tournament]
         li #[a(href="/tournaments/new") start tournament]
+
+        if extra_links
+          for extra_link in extra_links
+            li #[a(href="#{extra_link.url}") #{extra_link.text}]
+
 script(type='text/javascript').
   var navigationApp = angular.module('Lorelei', ['ui.bootstrap']);
   navigationApp.controller("NavigationController", ['$scope', function($scope) {}]);

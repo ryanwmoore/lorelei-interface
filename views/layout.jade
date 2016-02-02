@@ -15,12 +15,10 @@ html
     div.header
       include navigation.jade
     div(class="container #{main_div_class}")
-      div(class="row row-offcanvas row-offcanvas-right")
+      div(class="row")
         div(class="col-xs-12 col-sm-9")
-          p(class="pull-right visible-xs")
-            button(class="btn btn-primary btn-xs", data-toggle="offcanvas", type="button") Toggle nav
           block content
-        include navigation-footer.jade
+
       hr
       footer
         p &copy; 2016 Ryan W. Moore
