@@ -17,8 +17,9 @@
       <span class="table-or-bye bye" ng-show="match.isBye">(bye)</span>
     </span>
     <div>
-      <button id="increase-font" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Increase Font Size</button>
-      <button id="decrease-font" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span> Decrease Font Size</button>
+      <button id="increase-font" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Increase Text Size</button>
+      <button id="decrease-font" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span> Decrease Text Size</button>
+      <button id="go-fullscreen" class="btn btn-primary"><span class="glyphicon glyphicon-resize-full"></span> View in Fullscreen</button>
     </div>
   </div>
   <div class="row">
@@ -127,5 +128,9 @@
   jQuery("#increase-font").click(function() {
       baseSize = baseSize + baseSizeIncrement;
       resizeFullscreenEntries();
+  });
+
+  jQuery("#go-fullscreen").click(function() {
+      toggleFullScreen();
   });
 </script>
